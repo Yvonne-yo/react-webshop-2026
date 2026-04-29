@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <h1>Yvonnes webshop</h1>
+      <h1>YoYo Webshop</h1>
     </>
   )
 }
