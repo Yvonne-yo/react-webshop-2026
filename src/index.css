@@ -1,113 +1,100 @@
+/* index.css */       /* yvop fix */
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));     /* To make sure that dark mode works with all tailwind 4 versions. */
+
+/* Tailwind configuration */
+@theme {
+  --breakpoint-sm: 640px;
+  --breakpoint-lg: 1024px;
+
+  --font-open-sans: "Open Sans Variable", sans-serif;
+
+  /* Webshop brand colors  */
+  /* My logotype butterfly color rgb(7 130 189) */
+  --color-brand: rgb(7 130 189);            
+  --color-brand-dark: rgb(6 105 153);       
+  --color-brand-light: rgb(230 243 249);    
+
+  /* Link Tailwind names to CSS variables with the same name */
+  /* Background colors */
+  --color-bg-main: var(--bg-main);          
+  --color-bg-card: var(--bg-card);          
+  
+  /* Text colors */
+  --color-text-main: var(--text-main);        
+  --color-text-muted: var(--text-muted);  
+
+}
+
+/* CSS variables for light mode (default) */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --bg-main: rgb(248 250 252);
+  --bg-card: rgb(255 255 255);
+  --text-main: rgb(15 23 42);
+  --text-muted: rgb(71 85 105);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* CSS variables for dark mode  */
+.dark, [data-theme="dark"] {
+  --bg-main: rgb(16 36 70);
+  --bg-card: rgb(28 54 95);
+  --text-main: rgb(241 245 249);
+  --text-muted: rgb(148 163 184);
 }
+
+/* CSS global settings */
+:root {
+  font-family: var(--font-open-sans);
+  font-size: 16px;
+}
+
 
 body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  font-family: var(--font-open-sans);
+  background-color: var(--bg-main); 
+  color: var(--text-main);
+  transition: background-color 0.3s, color 0.3s;      /* toggle light/dark mode softly */
+                                                      /* To render text smooth by softening the edges of the letters */
+  -webkit-font-smoothing: antialiased;                /* For Chrome, Safari, Edge (WebKit/Blink) */
+  -moz-osx-font-smoothing: grayscale;                 /* For Firefox on Mac */
+
+  
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* Stops images from becoming larger than screen width */
+img {                   
+  max-width: 100%;
+  height: auto;
+  display: block;
+
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+/* ----- NAVIGATION ----- */
+.nav-sticky{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* hamburgermenu */
+.bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: currentColor;
+  transition: all 0.3s ease-in-out;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.hamburger.open .bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open .bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
