@@ -7,32 +7,48 @@
 @theme {
   --breakpoint-sm: 640px;
   --breakpoint-lg: 1024px;
-
   --font-open-sans: "Open Sans Variable", sans-serif;
 
-  /* Webshop brand colors  */
-  /* My logotype butterfly color rgb(7 130 189) */
+  /* Webshop brand colors  */     /* Logotype butterfly color rgb(7 130 189) */
   --color-brand: rgb(7 130 189);            
   --color-brand-dark: rgb(6 105 153);       
   --color-brand-light: rgb(230 243 249);    
 
   /* Link Tailwind names to CSS variables with the same name */
-  /* Background colors */
+  /* Background & text colors */
   --color-bg-main: var(--bg-main);          
   --color-bg-card: var(--bg-card);          
-  
-  /* Text colors */
   --color-text-main: var(--text-main);        
   --color-text-muted: var(--text-muted);  
 
+  /* Responsive size styling with clamp */
+  --font-size-hero: var(--fs-hero);
+  --font-size-h1: var(--fs-h1);
+  --font-size-h2: var(--fs-h2);
+  --font-size-h3: var(--fs-h3);
+  --font-size-base: var(--fs-p);
+
+  /* Responsive gaps for grids with clamp */
+  --spacing-grid-gap: var(--grid-gap);
 }
 
-/* CSS variables for light mode (default) */
+/* CSS variables */
 :root {
+  /* CSS variables for light mode (default) */
   --bg-main: rgb(248 250 252);
   --bg-card: rgb(255 255 255);
   --text-main: rgb(15 23 42);
   --text-muted: rgb(71 85 105);
+
+  /* CSS variables for Responsive size styling with clamp */
+  --fs-hero: clamp(2.5rem, 5vw + 2rem, 5rem);
+  --fs-h1: clamp(1.8rem, 2vw + 1.5rem, 3rem);
+  --fs-h2: clamp(1.4rem, 1vw + 1.2rem, 2rem);
+  --fs-h3: clamp(1.1rem, 0.5vw + 1rem, 1.4rem);
+  --fs-p: clamp(1rem, 0.2vw + 0.9rem, 1.125rem);
+
+  /* CSS variables for responsive gaps for grids with clamp */
+  --grid-gap: clamp(1rem, 2.5vw, 2.5rem);
 }
 
 /* CSS variables for dark mode  */
@@ -52,16 +68,55 @@
 
 body {
   margin: 0 auto;
-  font-family: var(--font-open-sans);
   background-color: var(--bg-main); 
   color: var(--text-main);
+  font-size: var(--fs-p);
+  line-height: 1.6;
   transition: background-color 0.3s, color 0.3s;      /* toggle light/dark mode softly */
                                                       /* To render text smooth by softening the edges of the letters */
   -webkit-font-smoothing: antialiased;                /* For Chrome, Safari, Edge (WebKit/Blink) */
   -moz-osx-font-smoothing: grayscale;                 /* For Firefox on Mac */
-
-  
 }
+
+/* Base Typography */
+h1 { font-size: var(--fs-h1); line-height: 1.1; font-weight: 800; margin-bottom: 0.5em; }
+h2 { font-size: var(--fs-h2); line-height: 1.2; font-weight: 700; margin-bottom: 0.5em; }
+h3 { font-size: var(--fs-h3); line-height: 1.3; font-weight: 700; margin-bottom: 0.5em; }
+
+/* --- Accessibility Helpers --- */
+/* Clear marking when you use tab with the keyboard */
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Skip to content - skips the menu for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-brand);
+  color: white;
+  padding: 1rem;
+  z-index: 2000;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* Hide text visually but keep for screen readers,  */    /*  The sighted user only sees the icon, 
+                                                              while the visually impaired user hears "View cart" spoken aloud.*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 
 /* Stops images from becoming larger than screen width */
 img {                   
