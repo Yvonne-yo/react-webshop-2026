@@ -70,7 +70,7 @@
 
 /* CSS variables for dark mode, if the user has selected it by settings */
 .dark, [data-theme="dark"] {            /* use for css class .dark OR when data attribute is data-theme=dark */
-  --bg-main: rgb(16 36 70);           /* example <html data-theme="dark"> */
+  --bg-main: rgb(16 36 70);           /* example <html data-theme="dark"> (preferred by some libraries/scripts) */
   --bg-card: rgb(28 54 95);
   --text-main: rgb(241 245 249);
   --text-muted: rgb(148 163 184);
