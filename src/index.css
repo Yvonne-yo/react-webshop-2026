@@ -5,6 +5,7 @@
 @custom-variant dark (&:where(.dark, .dark *));     /* To make sure that dark mode works with all tailwind 4 versions. */
 
 /* Tailwind configuration */
+/* Theme variables instruct Tailwind to create new utility classes that I can use in my project. */
 @theme {
   --breakpoint-sm: 640px;
   --breakpoint-lg: 1024px;
@@ -41,10 +42,10 @@
   font-size: 16px;
 
   /* CSS variables for light mode (default) */
-  --bg-main: rgb(248 250 252);
-  --bg-card: rgb(255 255 255);
-  --text-main: rgb(15 23 42);
-  --text-muted: rgb(71 85 105);
+  --bg-main: rgb(238 247 252);     /* Soft turquoise-white                              */
+  --bg-card: rgb(255 255 255);     /* White cards that pop against the background.      */
+  --text-main: rgb(11 37 51);      /* Dark turquoise text for contrast and readability. */
+  --text-muted: rgb(58 93 112);    /* Muted turquoise gray for secondary text.          */
 
   /* CSS variables for Responsive size styling with clamp */
   --fs-hero: clamp(2.5rem, 5vw + 2rem, 5rem);
@@ -58,22 +59,31 @@
 }
 
 /* ----- DARK MODE LOGIC ----- */
-/* CSS variables automatic dark mode from the system, if the user has not forced light mode */
-@media (prefers-color-scheme: dark) {   /* Ask browser, has the user set computer/mobile to dark mode? If yes, execute {the code}    */
-  :root:not(.light) {                   /* Apply these dark mode colors on root, but only if css class .light is NOT set manually    */
-    --bg-main: rgb(16 36 70);         /* by webshop toggle light/dark mode by the user */
-    --bg-card: rgb(28 54 95);
-    --text-main: rgb(241 245 249);
-    --text-muted: rgb(148 163 184);
+/* CSS variables dark mode, automatically from system                                         */
+/* Apply dark mode from the system, if the user has not forced light mode                     */
+/* Ask browser, has the user set computer/mobile to dark mode? If yes, execute {the code}     */
+/* Apply these dark mode colors on root, but only if css class .light is NOT set manually by  */
+/* the webshop toggle light/dark mode button. */
+@media (prefers-color-scheme: dark) {   
+  :root:not(.light) {                   
+    --bg-main: rgb(10 26 38);         /* Deep dark turquoise background.                    */
+    --bg-card: rgb(18 43 61);         /* Slightly lighter turquoise blue for card.          */
+    --text-main: rgb(235 246 252);    /* Light turquoise white text for readability.        */
+    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text      */
+
   }
 }
 
-/* CSS variables for dark mode, if the user has selected it by settings */
-.dark, [data-theme="dark"] {            /* use for css class .dark OR when data attribute is data-theme=dark */
-  --bg-main: rgb(16 36 70);           /* example <html data-theme="dark"> (preferred by some libraries/scripts) */
-  --bg-card: rgb(28 54 95);
-  --text-main: rgb(241 245 249);
-  --text-muted: rgb(148 163 184);
+/* CSS variables for dark mode, manually setting                                              */
+/* Apply these dark mode colors on root, but only if dark mode is set manually by             */
+/* the webshop toggle light/dark mode button.                                                 */
+/* Use colors for css class .dark OR when data attribute is data-theme=dark (or both)         */
+/* example <html data-theme="dark"> (preferred by some libraries/scripts)                     */
+.dark, [data-theme="dark"] {            
+    --bg-main: rgb(10 26 38);         /* Deep dark turquoise background.                    */
+    --bg-card: rgb(18 43 61);         /* Slightly lighter turquoise blue for card.          */
+    --text-main: rgb(235 246 252);    /* Light turquoise white text for readability.        */
+    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text      */
 }
 
 
@@ -122,9 +132,10 @@ img {
 }
 .skip-link:focus { top: 0; }
 
-/* Hide text visually but keep for screen readers,  */    /*  The sighted user only sees the icon, while the visually  */
-.sr-only {                                                /*  impaired user hears "View cart" spoken aloud for example */
-  position: absolute;
+/* Hide text visually but keep for screen readers,                                  */    
+/* The sighted user only sees the icon, while the visually                          */
+/* impaired user hears "View cart" spoken aloud for example position: absolute;     */
+.sr-only {                                                
   width: 1px;
   height: 1px;
   padding: 0;
@@ -142,7 +153,7 @@ img {
   z-index: 1000;
 }
 
-/* hamburgermenu */
+/* Hamburger menu. */
 .bar {
   display: block;
   width: 24px;
