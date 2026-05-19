@@ -1,6 +1,6 @@
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
 
-/* ----- BOX 1: WelcomeStrip - Responsible ONLY for rendering the top text banner. ----- */
+/* ----- BOX 1: WelcomeStrip - The top text banner. ----- */
 function WelcomeStrip() {
   return (
     <div className="bg-color-brand-light dark:bg-bg-card border-b border-brand/10 py-4 text-center transition-colors duration-300">
@@ -11,7 +11,7 @@ function WelcomeStrip() {
   );
 }
 
-/* ----- BOX 2: LogoCenterpiece - Responsible ONLY for rendering the floating butterfly logo and the radial ellipse behind it. ----- */
+/* ----- BOX 2: LogoCenterpiece - The floating white circle with the butterfly logo and the radial ellipse behind it. ----- */
 function LogoCenterpiece() {
   return (
     <section
@@ -35,7 +35,7 @@ function LogoCenterpiece() {
             className="w-16 h-16 object-contain rounded-md" // css styling
             width="64" // html reserves size for the img
             height="64" // avoids Layout Shift when loading the webpage
-            // performance optimization
+                        // performance optimization
           />
         </div>
       </div>
