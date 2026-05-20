@@ -146,7 +146,8 @@ img {
     impaired user hears "View cart" spoken aloud for example     
     Tailwind v4 translation: 
     Tailwind has an official built-in utility class that replaces this entire block completely:
-    Simply use the class "sr-only" anywhere in your HTML/JSX without writing this CSS.            */
+    Simply use the class "sr-only" anywhere in your HTML/JSX without writing this CSS.           
+    sr-only = Screen Reader Only                                                            */
 .sr-only {                                                
   width: 1px;
   height: 1px;
