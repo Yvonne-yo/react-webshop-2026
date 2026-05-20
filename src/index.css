@@ -113,13 +113,21 @@ img {
 }
 
 /* ----- ACCESSIBILITY HELPERS ----- */
-/* Clear marking when you use tab with the keyboard */
+/* Deliberately keeping these helper classes in CSS to clarify the accessibility choices for the project. */
+ 
+/* Clear marking when navigating with the keyboard (Tab-key).
+    Tailwind v4 translation: 
+    This can be added directly to interactive items using classes like:
+    "focus-visible:outline-3 focus-visible:outline-brand focus-visible:outline-offset-2"  */
 :focus-visible {
   outline: 3px solid var(--color-brand);
   outline-offset: 2px;
 }
 
-/* Skip to content - skips the menu for keyboard users */
+/* Skip to content - skips long navigation menus for keyboard users.
+    Tailwind v4 translation: 
+    This layout logic can be written entirely in JSX on the anchor tag using:
+    "absolute -top-25 left-0 bg-brand text-white p-4 z-2000 transition-all focus:top-0"   */
 .skip-link {
   position: absolute;
   top: -100px;
@@ -132,9 +140,13 @@ img {
 }
 .skip-link:focus { top: 0; }
 
-/* Hide text visually but keep for screen readers,                                  */    
-/* The sighted user only sees the icon, while the visually                          */
-/* impaired user hears "View cart" spoken aloud for example position: absolute;     */
+
+/* Hide text visually but keep for screen readers.
+    The sighted user only sees the icon, while the visually                          
+    impaired user hears "View cart" spoken aloud for example     
+    Tailwind v4 translation: 
+    Tailwind has an official built-in utility class that replaces this entire block completely:
+    Simply use the class "sr-only" anywhere in your HTML/JSX without writing this CSS.            */
 .sr-only {                                                
   width: 1px;
   height: 1px;
@@ -146,30 +158,5 @@ img {
   border-width: 0;
 }
 
-/* ----- NAVIGATION ----- */
-.nav-sticky{
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
+/* --------------------------------- */
 
-/* Hamburger menu. */
-.bar {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background-color: currentColor;
-  transition: all 0.3s ease-in-out;
-}
-
-.hamburger.open .bar:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
-}
-
-.hamburger.open .bar:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.open .bar:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
-}
