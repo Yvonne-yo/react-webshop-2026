@@ -14,7 +14,7 @@ export default function MainLayout({ children }) {
 
       <NavBar />
 
-      <div id="main-content" className="grow focus:outline-none">
+      <div id="main-content" className="container mx-auto px-4 grow focus:outline-none">
         <MainContent>{children}</MainContent>
       </div>
 
