@@ -1,15 +1,39 @@
-// import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ThemeProvider from "./components/ThemeProvider";
 
-import './App.css'
+import MainLayout from "./layout/MainLayout";
 
-function App() {
-  // const [count, setCount] = useState(0)
+import HomeView from "./views/HomeView";
+import AboutView from "./views/AboutView";
+import CartView from "./views/CartView";
+import ContactView from "./views/ContactView";
 
+
+
+export default function App() {
   return (
     <>
-      <h1>YoYo Webshop</h1>
-    </>
-  )
-}
+      <ThemeProvider>
+        <BrowserRouter>
+          <MainLayout>
+            
+            {/* ----- Routes matching navbar links -----  */}
+            <Routes>
+              {/* The root path / to webshop homepage view */}
+              <Route path="/" element={<HomeView />} />
 
-export default App
+              {/* About and Contact views */}
+              <Route path="/about" element={<AboutView />} />
+              <Route path="/contact" element={<ContactView />} />
+
+              {/* Cart checkout placeholder route */}
+              <Route path="/cart" element={<CartView />} />
+
+            </Routes>
+            
+          </MainLayout>
+        </BrowserRouter>
+      </ThemeProvider>
+    </>
+  );
+}

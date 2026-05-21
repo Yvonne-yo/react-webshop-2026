@@ -1,113 +1,163 @@
+/* index.css for YoYo Webshop */
 @import "tailwindcss";
 
+/* ----- TAILWIND & DARK MODE SETUP ----- */
+@custom-variant dark (&:where(.dark, .dark *));     /* To make sure that dark mode works with all tailwind 4 versions. */
+
+/* Tailwind configuration */
+/* Theme variables instruct Tailwind to create new utility classes that I can use in my project. */
+@theme {
+  --breakpoint-sm: 640px;
+  --breakpoint-lg: 1024px;
+  --font-open-sans: "Open Sans Variable", sans-serif;
+
+  /* Webshop brand colors  */     /* Logotype butterfly color rgb(7 130 189) */
+  --color-brand: rgb(7 130 189);            
+  --color-brand-dark: rgb(6 105 153);       
+  --color-brand-light: rgb(230 243 249);    
+
+  /* Link Tailwind names to CSS variables with the same name */
+  /* Background & text colors */
+  --color-bg-main: var(--bg-main);          
+  --color-bg-card: var(--bg-card);          
+  --color-text-main: var(--text-main);        
+  --color-text-muted: var(--text-muted);  
+
+  /* Responsive size styling with clamp */
+  --font-size-hero: var(--fs-hero);
+  --font-size-h1: var(--fs-h1);
+  --font-size-h2: var(--fs-h2);
+  --font-size-h3: var(--fs-h3);
+  --font-size-base: var(--fs-p);
+
+  /* Responsive gaps for grids with clamp */
+  --spacing-grid-gap: var(--grid-gap);
+}
+
+/* ----- GLOBAL SETTINGS & LIGHT MODE (default) ----- */
+/* CSS variables */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Font & Basic */
+  font-family: var(--font-open-sans);
+  font-size: 16px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* CSS variables for light mode (default) */
+  --bg-main: rgb(238 247 252);     /* Soft turquoise-white                              */
+  --bg-card: rgb(255 255 255);     /* White cards that pop against the background.      */
+  --text-main: rgb(11 37 51);      /* Dark turquoise text for contrast and readability. */
+  --text-muted: rgb(58 93 112);    /* Muted turquoise gray for secondary text.          */
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* CSS variables for Responsive size styling with clamp */
+  --fs-hero: clamp(2.5rem, 5vw + 2rem, 5rem);
+  --fs-h1: clamp(1.8rem, 2vw + 1.5rem, 3rem);
+  --fs-h2: clamp(1.4rem, 1vw + 1.2rem, 2rem);
+  --fs-h3: clamp(1.1rem, 0.5vw + 1rem, 1.4rem);
+  --fs-p: clamp(1rem, 0.2vw + 0.9rem, 1.125rem);
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  /* CSS variables for responsive gaps for grids with clamp */
+  --grid-gap: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+/* ----- DARK MODE LOGIC ----- */
+/* CSS variables dark mode, automatically from system                                         */
+/* Apply dark mode from the system, if the user has not forced light mode                     */
+/* Ask browser, has the user set computer/mobile to dark mode? If yes, execute {the code}     */
+/* Apply these dark mode colors on root, but only if css class .light is NOT set manually by  */
+/* the webshop toggle light/dark mode button. */
+@media (prefers-color-scheme: dark) {   
+  :root:not(.light) {                   
+    --bg-main: rgb(10 26 38);         /* Deep dark turquoise background.                    */
+    --bg-card: rgb(18 43 61);         /* Slightly lighter turquoise blue for card.          */
+    --text-main: rgb(235 246 252);    /* Light turquoise white text for readability.        */
+    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text      */
+
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* CSS variables for dark mode, manually setting                                              */
+/* Apply these dark mode colors on root, but only if dark mode is set manually by             */
+/* the webshop toggle light/dark mode button.                                                 */
+/* Use colors for css class .dark OR when data attribute is data-theme=dark (or both)         */
+/* example <html data-theme="dark"> (preferred by some libraries/scripts)                     */
+.dark, [data-theme="dark"] {            
+    --bg-main: rgb(10 26 38);         /* Deep dark turquoise background.                    */
+    --bg-card: rgb(18 43 61);         /* Slightly lighter turquoise blue for card.          */
+    --text-main: rgb(235 246 252);    /* Light turquoise white text for readability.        */
+    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text      */
 }
 
+
+/* ----- BASE TYPOGRAPHY & GLOBAL STYLES ----- */
 body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  background-color: var(--bg-main); 
+  color: var(--text-main);
+  font-size: var(--fs-p);
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;      /* toggle light/dark mode softly */
+                                                      /* To render text smooth by softening the edges of the letters */
+  -webkit-font-smoothing: antialiased;                /* For Chrome, Safari, Edge (WebKit/Blink) */
+  -moz-osx-font-smoothing: grayscale;                 /* For Firefox on Mac */
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* Base Typography */
+h1 { font-size: var(--fs-h1); line-height: 1.1; font-weight: 800; margin-bottom: 0.5em; }
+h2 { font-size: var(--fs-h2); line-height: 1.2; font-weight: 700; margin-bottom: 0.5em; }
+h3 { font-size: var(--fs-h3); line-height: 1.3; font-weight: 700; margin-bottom: 0.5em; }
+
+/* Images can not become larger than screen width */
+img {                   
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+/* ----- ACCESSIBILITY HELPERS ----- */
+/* Deliberately keeping these helper classes in CSS to clarify the accessibility choices for the project. */
+ 
+/* Clear marking when navigating with the keyboard (Tab-key).
+    Tailwind v4 translation: 
+    This can be added directly to interactive items using classes like:
+    "focus-visible:outline-3 focus-visible:outline-brand focus-visible:outline-offset-2"  */
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* Skip to content - skips long navigation menus for keyboard users.
+    Tailwind v4 translation: 
+    This layout logic can be written entirely in JSX on the anchor tag using:
+    "absolute -top-25 left-0 bg-brand text-white p-4 z-2000 transition-all focus:top-0"   */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-brand);
+  color: white;
+  padding: 1rem;
+  z-index: 2000;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+
+/* Hide text visually but keep for screen readers.
+    The sighted user only sees the icon, while the visually                          
+    impaired user hears "View cart" spoken aloud for example     
+    Tailwind v4 translation: 
+    Tailwind has an official built-in utility class that replaces this entire block completely:
+    Simply use the class "sr-only" anywhere in your HTML/JSX without writing this CSS.           
+    sr-only = Screen Reader Only                                                            */
+.sr-only {                                                
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
+/* --------------------------------- */
+
