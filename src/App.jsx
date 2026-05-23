@@ -6,6 +6,7 @@ import MainLayout from "./layout/MainLayout";
 import HomeView from "./views/HomeView";
 import AboutView from "./views/AboutView";
 import CartView from "./views/CartView";
+import CategoryView from "./views/CategoryView";
 import ContactView from "./views/ContactView";
 
 
@@ -17,10 +18,14 @@ export default function App() {
         <BrowserRouter>
           <MainLayout>
             
-            {/* ----- Routes matching navbar links -----  */}
+            {/* ----- Routes matching navbar and dropdown menu links -----  */}
             <Routes>
               {/* The root path / to webshop homepage view */}
               <Route path="/" element={<HomeView />} />
+
+              {/* Dynamic category view route skeleton */}
+              {/* The colon (:) tells React Router that categoryName is a variable URL parameter */}
+              <Route path="/category/:categoryName" element={<CategoryView />} />
 
               {/* About and Contact views */}
               <Route path="/about" element={<AboutView />} />
