@@ -36,7 +36,7 @@ import { getAllProducts, getProductsByCategory } from "../api/productsApi";
 //
 // Wave 2: The Asynchronous API Resolution (Approx. Millisecond 300)
 // The async/await background pipeline resolves once DummyJSON responds. The data lands, and we invoke 
-// setProductsData(result) followed by the finally block setting setLoading(false). Because React state triggers 
+// setProductsData(response) followed by the finally block setting setLoading(false). Because React state triggers 
 // a mandatory re-render whenever state setters are executed, React halts and forces this whole Custom Hook 
 // to execute a second time. During this second pass, the hook returns a brand new object containing the 
 // sharp product data array and loading as false, which automatically hides the spinner and draws the catalogue of products..
@@ -58,18 +58,18 @@ export function useProducts(categoryName = null, limit = 12, skip = 0) {
 
             // try-catch-finally
             try {
-                let result;
+                let response;
 
                 // fetch products by category or fetch all products
                 if(categoryName) {
-                    result = await getProductsByCategory(categoryName, limit, skip);
+                    response = await getProductsByCategory(categoryName, limit, skip);
                 } else {
-                    result = await getAllProducts(limit, skip);
+                    response = await getAllProducts(limit, skip);
                 }
 
                 // Only commit updates to state if the component lifecycle is still currently mounted
                 if (isMounted) {
-                    setProductsData(result);
+                    setProductsData(response);
                 }
 
             } catch (err) {
@@ -79,7 +79,7 @@ export function useProducts(categoryName = null, limit = 12, skip = 0) {
                 }
                  
             } finally {
-                // The finally block guarantees execution, ensuring that the loading screen ends for all results
+                // The finally block guarantees execution, ensuring that the loading screen ends for all responses
                 if (isMounted) {
                     setLoading(false);
                 }

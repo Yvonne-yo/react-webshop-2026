@@ -38,3 +38,21 @@ export async function getProductsByCategory(categoryName, limit = 12, skip = 0) 
         throw new Error(`Could not load ${categoryName} products. (${error.message})`);
     }    
 }
+
+/* ----- Function 3: Fetches a single specific product by its unique ID ----- */
+export async function getProductById(productId) {
+    try {
+        const response = await fetch (`https://dummyjson.com/products/${productId}`);
+
+        if(!response.ok) {
+            throw new Error(`HTTP Error! Product ID ${productId} not found. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data; 
+
+    } catch (error) {
+        console.error(`Fetch failure in getProductById for ID ${productId}:`, error.message);
+        throw new Error(`Could not load product details. (${error.message})`);
+    }
+}
