@@ -1,5 +1,6 @@
 import { Sparkles, Loader2 } from "lucide-react";
 import { useFeaturedProducts } from "../hooks/useFeaturedProducts";
+import { ProductCard } from "./ProductCard";
 
 /* ----- COMPONENT PopularProducts ----- */
 // Render "This Week's Most Popular Products" to the storefront HomeView
@@ -52,56 +53,14 @@ export default function PopularProducts() {
                 </h3>
             </div>
 
-
-
-            {/* ----- Scalable Responsive Product Grid container ----- */}
-            {/* This row sets up the column rules: 1 on mobile, 2 on tablet, 4 on desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-grid-gap">
-
-				{/* Iterate through the 4 most popular products  */}
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-grid-gap">
+				{/* Reusable simple mapping usage of the component ProductCard */}
 				{products.map((product) => (
-					<div
-						key={product.id}
-						className="bg-bg-card p-5 rounded-2xl border border-text-muted/10 shadow-xs hover:shadow-md hover:border-brand/20
-									transition-all duration-300 group flex flex-col justify-between"
-					>
-						<div>
-							{/* Product thumbnail image container area */}
-							<div className="aspect-square bg-bg-main rounded-xl flex items-center justify-center mb-4 overflow-hidden relative border border-text-muted/5">
-								<img
-									src={product.thumbnail}
-									alt={product.title}
-									className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-									loading="lazy"
-								/>
-							</div>	
-						
-							{/* Product Metadata Sub-rows */}
-							<span className="text-[10px] font-black text-brand uppercase tracking-widest block mb-1">
-	                			{product.category}
-              				</span>
-							<h4 className="font-bold text-text-main text-base tracking-tight mb-2 truncate">
-                				{product.title}
-              				</h4>
-						
-							{/* Price and Action Button Footer Structure */}
-							<div className="flex items-center justify-between mt-4 pt-2 border-t border-text-muted/5">	
-								<span className="font-black text-text-main text-lg">
-									${product.price}	
-								</span>
-								<button
-  									className="bg-brand hover:bg-brand-dark text-white font-bold text-xs py-2 px-4 rounded-lg 
-             									transition cursor-pointer shadow-xs active:scale-95"
-  												aria-label={`Add ${product.title} to shopping cart`}
-								>
-								Add to cart
-								</button>
-							</div>						
-						</div>
-					</div>
+					<ProductCard
+						key={product.id} 
+						product={product} />
 				))}
-
-            </div>
+			</div>
 		</section>
     );
 }
