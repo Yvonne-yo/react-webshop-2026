@@ -93,8 +93,8 @@ export function useProducts(categoryName = null, limit = 12, skip = 0) {
             isMounted = false;
         }
     
-        // The hook automatically reruns if category, limit parameters or pagination skips change!
-    }, [categoryName, limit, skip]);
+        
+    }, [categoryName, limit, skip]); // useEffect dependency:  useEffect automatically reruns if category, limit parameters or pagination skips change!
     
     // Object Property Shorthand: example loading: loading can be replaced by just loading.
     return {
