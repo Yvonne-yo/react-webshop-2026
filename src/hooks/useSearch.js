@@ -17,10 +17,10 @@ export function useSearch(searchQuery) {
     const [error, setError] = useState(null);
 
     // useDebounce custom hook
-    // debouncedQuery will stay forzen and empty until the user takes a 300ms(default value) pause from typing.
-    const debouncedQuery = useDebounce(searchQuery, 300);
+    // debouncedQuery will stay frozen and empty until the user takes a 4000 ms = 4 seconds(default value 300ms) pause from typing.
+    // Here the delay is set to 4 seconds so the debounce will be clear to the user during the demo.
+    const debouncedQuery = useDebounce(searchQuery, 4000);
 
-    
 
     useEffect(() => {
         
