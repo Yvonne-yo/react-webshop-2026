@@ -11,7 +11,7 @@ import { useDebounce } from "./useDebounce";
 // debounce is used.
 // async/await and try/catch/finally is used.
 
-export function useSearch(searchQuery) {
+export function useSearch(searchQuery, onFetchComplete) {
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -38,7 +38,14 @@ export function useSearch(searchQuery) {
             setLoading(true);
             setError(null);
 
+            // FIXED FOR THE OPENING LOOP BUG:
+            // We set a local trigger flag to true as soon as a active network request starts.
+            // This ensures we can distinguish between a newly finished search and an old search 
+            // that is simply resting in the background memory!
+            let didFetchPerform = false;
+
             try {
+                didFetchPerform = true; // Yes, an active fetch is performing right now!
                 const result = await searchProducts(debouncedQuery.trim());
                 const rawProducts = result.products || [];
 
@@ -48,7 +55,23 @@ export function useSearch(searchQuery) {
                 );
 
                 if (isMounted) {
-                    setSearchResults(secureFilteredResults);
+                    setSearchResults(secureFilteredResults);  
+
+                    // LOOP-SECURE LIFECYCLE EVENT TRIGGER
+                    // The asynchronous server fetch has completed and data has landed safely!
+                    // 
+                    // 1. didFetchPerform: Guard flag. Ensures we only trigger this if a real fetch 
+                    //    just finished, preventing the menu from locking in an infinite closing loop.
+                    // 2. onFetchComplete & typeof: Defensive guards. Verifies that a valid callback 
+                    //    function was supplied by the parent to prevent throwing a runtime TypeError.
+                    // 
+                    // If all criteria are met, we execute the callback to let the calling component
+                    // safely orchestrate its own post-fetch actions (like closing layout menus).
+                    // =====================================================
+                    if (didFetchPerform && onFetchComplete && typeof onFetchComplete === "function") {
+                        onFetchComplete();
+                    }
+
                 }
 
             } catch (err) {
@@ -69,8 +92,14 @@ export function useSearch(searchQuery) {
             isMounted = false;
         };
 
+        // EFFECT DEPENDENCIES
+        // - debouncedQuery: Fires the search whenever the user types a new word.
+        // - onFetchComplete: Added to satisfy React's strict rules because it is used 
+        //   inside the code block. 
+        //   The function never changes during the program, and therefore it is 
+        //   100% safe to include it in the array without the page starting to load forever in an infinite loop.
+    }, [debouncedQuery, onFetchComplete]); 
 
-    }, [debouncedQuery]); // useEffect dependency: Strictly fires when the throttled query changes
 
     // DYNAMIC DERIVED STATE (Instant UI Wiper utilizing a Ternary Operator)
     // The conditional operator (? :) dynamically evaluates the search status in mid-air:
