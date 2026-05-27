@@ -15,7 +15,7 @@ export default function PopularProducts() {
 			<div className="flex flex-col items-center justify-center py-20 text-brand animate-fade-in">
 				<Loader2 className="w-10 h-10 animate-spin mb-4" />
 				<p className="text-text-muted font-bold text-sm tracking-wide">
-					Assembling our visual boutique collection...
+					Assembling this weeks most popular products...
 				</p>
 			</div>
 		);

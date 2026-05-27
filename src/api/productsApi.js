@@ -1,5 +1,5 @@
 // Fetch product information from DummyJSON API service at "https:/dummyjson.com/products"
-// async/await och try/catch används.
+// async/await och try/catch is used.
 
 // ----- LAYERED ERROR HANDLING (Developer vs Webshop Customer) -----
 // 1. console.error logs the raw, technical system message directly into the browser's developer console.

@@ -8,7 +8,7 @@ export function useDebounce(value, delay = 300) {
 
     
     // The debounce timer
-    // Schedule a timer to push the latest raw input value into our internal 
+    // Schedule a timer to push the latest raw input value into the internal 
     // debounced state only after the specified delay threshold (default 300ms) has passed.
     useEffect(() => {
         const timer = setTimeout(() => {
