@@ -1,7 +1,11 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"
 import { Search } from "lucide-react";
 
 /* ----- COMPONENT SearchBar ----- */
-/* Reusable search input field.    */
+// Search input form
+// On form submit (enter or button click),
+// it programmatically routes the user to the dynamic SearchResultView
 export default function SearchBar( { value, onChange, onSubmit, isMobile = false } ) {
     // Dynamic layout positions (Mobile block spacing vs desktop placement)
     const containerClass = isMobile

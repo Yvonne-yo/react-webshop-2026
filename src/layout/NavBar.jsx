@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+// import of useLocation and useNavigate to track where the user is browsing and reroute
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Sun, Moon, ShoppingCart, Menu, X } from "lucide-react";
 import { useTheme } from "../hooks/useTheme";
 import { ALLOWED_CATEGORIES } from "../config/shopConfig";
@@ -40,7 +41,7 @@ function LogoLink({ onClick}) {
 
 /* ----- SUBCOMPONENT : DropdownMenu (Organism) ----- */
 // Render the responsive dropdown wrapper and its links tree hierarchy
-function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSearchSubmit}) {
+function DropdownMenu({ isOpen, onClose, searchQuery, handleSearchChange, handleSearchSubmit}) {
     // If the menu is closed, render absolutly nothing
     if (!isOpen) return null;
 
@@ -58,7 +59,7 @@ function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSear
             {/* Mobile search bar – automatically hidden on desktops via the built-in SearchBar classes */}
             <SearchBar 
                 value={searchQuery} 
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 onSubmit={handleSearchSubmit}
                 isMobile={true}
             />
@@ -115,18 +116,43 @@ function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSear
 
 /* ----- MAIN COMPONENT : NavBar (Orchestrator) ----- */
 // Render the html-tag <header> which contains the webshop navigation bar
-export function NavBar(){
+export function NavBar({ searchQuery, setSearchQuery }){
     const { theme, toggleTheme } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
+
+    // Initialize router hooks to track location and enforce seamless redirects
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
 
+
+    /* ----- INTERCEPTION: handleSearchChange ----- */
+    // Search redirects the user to the root path, since that's where search results
+    // rendering are handled.
+    // Fires dynamically whenever the customer types a single character.
+    // If they are currently standing on a secondary sub-view (like /category or /about),
+    // it programmatically redirects them back to the home view instantly,
+    // ensuring the live search engine receives the search query prop smoothly!
+    // =========================
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+
+        // If the user isn't currently standing on the root path ('/'),
+        // force an instant reroute.
+        if (location.pathname !== "/") {
+            navigate("/");
+        }
+
+    }
+
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        console.log("Searching product catalog for: ", searchQuery);
+        // Since it's a real-time live search, hitting enter simply closes the mobile menu drawer seamlessly
+        closeMenu();
     };
 
     return(
@@ -138,10 +164,10 @@ export function NavBar(){
                     {/* Brand Logo anchor block */}
                     <LogoLink onClick={closeMenu} />
 
-                    {/* Global desktop SearchBar */}
+                    {/* Desktop SearchBar */}
                     <SearchBar
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={handleSearchChange}
                         onSubmit={handleSearchSubmit}
                         isMobile={false}
                     />
@@ -205,7 +231,7 @@ export function NavBar(){
                     isOpen={isMenuOpen}
                     onClose={closeMenu}
                     searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
+                    setSearchQuery={handleSearchChange}
                     handleSearchSubmit={handleSearchSubmit}
                 />
 
