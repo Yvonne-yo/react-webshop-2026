@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, Search, Sparkles } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useSearch } from "../hooks/useSearch";
 import { ProductCard } from "../components/ProductCard";
 
@@ -8,7 +8,13 @@ export default function SearchView() {
 
   const { searchResults, loading, error } = useSearch(searchInput);
 
+
+  // INTERFACE SIGNALS
+  // - isSearching: True as long as the input field contains actual text letters.
+  // - hasResults: True when the backend pipeline holds validated product items.
+  // =========================================================================
   const isSearching = searchInput.trim() !== "";
+  const hasResults = searchResults && searchResults.length > 0;
 
   return (
     <section className="container mx-auto px-4 py-12 max-w-6xl">
@@ -21,31 +27,31 @@ export default function SearchView() {
         </h1>
       </div>
 
-      {/* LUXURIOUS LIVE SEARCH INPUT PANEL */}
+      {/* LIVE SEARCH INPUT FIELD */}
       <div className="relative max-w-xl mb-12">
         <input
           type="text"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Type to search premium beauty items (e.g. Mascara, Perfume)..."
-          className="w-full h-12 pl-12 pr-4 bg-bg-card border border-text-muted/20 rounded-2xl 
-                     text-text-main placeholder-text-muted/50 focus:outline-none focus:border-brand 
+          className="w-full h-12 pl-12 pr-4 bg-white border border-text-muted/20 rounded-2xl 
+                     text-slate-900 placeholder-text-slate-500 focus:outline-none focus:border-brand 
                      transition-all shadow-sm font-medium text-sm"
         />
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted/50" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand" />
       </div>
 
-      {/* FAS 1: LIFECYCLE INTERCEPTION - LOADING TIMERS WORK LIVE HERE */}
+      {/* PHASE 1: LIFECYCLE INTERCEPTION - LOADING TIMERS WORK LIVE HERE */}
       {loading && (
         <div className="flex flex-col items-center justify-center py-16 text-brand">
           <Loader2 className="w-10 h-10 animate-spin mb-4" />
-          <p className="text-text-muted font-bold text-sm tracking-wide">
-            Throttling network operations... Processing "{searchInput}" in 4000ms...
+          <p className="text-text-brand font-bold text-sm tracking-wide">
+            Processing "{searchInput}" in 4000ms...
           </p>
         </div>
       )}
 
-      {/* FAS 2: LIFECYCLE INTERCEPTION - ERROR HANDLING */}
+      {/* PHASE 2: LIFECYCLE INTERCEPTION - ERROR HANDLING */}
       {error && !loading && (
         <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-2xl text-center my-6 max-w-xl mx-auto">
           <h4 className="font-black text-lg mb-2">Search Failure</h4>
@@ -53,16 +59,21 @@ export default function SearchView() {
         </div>
       )}
 
-      {/* FAS 3: SAFETY GUARD & COMMERICAL FALLBACK UX */}
-      {/* If a query returns 0 matching hits, we display your brilliant fallbackFavorites grid! */}
-      {searchResults.length === 0 && isSearching && !loading && (
-        <div className="text-center py-8 bg-bg-card/40 border border-text-muted/5 rounded-2xl">
-          <p className="text-text-muted font-bold text-base mb-1">No products found</p>
-          <p className="text-text-muted/60 text-xs font-medium">We couldn't find any premium beauty items matching your query.</p>
-        </div>
-      )}
+        {/* PHASE 3: NO PRODUCTS FOUND NOTICE */}
+        {/* Checks that text exists, loading is complete, but backend array is empty! */}
+         {!hasResults && isSearching && !loading && (
+          <div className="text-center py-10 bg-bg-card dark:bg-black/20 border border-text-muted/20 dark:border-white/20 rounded-2xl mb-14 animate-fade-in max-w-xl mx-auto px-6 shadow-sm">
+            <p className="text-text-main dark:text-white font-black text-lg mb-1.5 tracking-tight">
+              No products found
+            </p>
+            <p className="text-text-muted dark:text-white/80 text-sm font-medium leading-relaxed">
+              We couldn't find any premium beauty items matching <span className="text-brand font-bold">"{searchInput}"</span>.
+            </p>
+          </div>
+        )}
 
-      {/* FAS 4: MAIN INTERFACE RENDERING - RESULTS GRID */}
+
+      {/* PHASE 4: MAIN INTERFACE RENDERING - RESULTS GRID */}
       {searchResults.length > 0 && !loading && (
         <>
           <div className="flex items-center gap-2 mb-6 pb-2 border-b border-text-muted/5 text-text-muted text-xs font-bold uppercase tracking-wider">
