@@ -72,19 +72,23 @@ export function useSearch(searchQuery = "") {
         // - debouncedQuery: Fires the search whenever the user types a new word.
     }, [debouncedQuery]); 
 
-
-    // =========================================================================
-    // DYNAMIC DERIVED LOADING STATE (Kaskadsäker och smart laddtext)
-    // We check if the active user input has reached our minimum length of 3 letters,
-    // and if that input string is still different from the frozen debounced query.
-    // 
+// SMART TIMER LOADER (Loading Screen Synchronization)
+//
+// How it works:
+// As soon as you press a key (e.g. type "l"), the 'searchQuery' changes immediately.
+// But the 'debouncedQuery' is still there and completely empty for another 4 seconds!
+//
+// JavaScript compares these two: Is "l" different from ""? Yes! That means the timer is counting down
+// right now. Then we force 'finalLoadingState' to be TRUE immediately.
+// This makes the loader spinner start on the screen the same microsecond you press
+// on the keyboard, instead of waiting 4 seconds for the API fetch to start!
+  
+    // DYNAMIC DERIVED LOADING STATE
     // If it matches these conditions, the 4-second timer is currently counting down!
     // By dynamically calculating 'isWaitingForTimer' during flight, we can instantly
-    // fire up your loading animations on the screen WITHOUT triggering any unsafe,
+    // fire up the loading animations on the screen WITHOUT triggering any unsafe,
     // performance-reducing sync setState cascading render alerts inside the effect loop!
-    // =========================================================================
-    const hasValidLength = searchQuery.trim().length >= 3;
-    const isWaitingForTimer = hasValidLength && searchQuery.trim() !== debouncedQuery.trim();
+    const isWaitingForTimer = searchQuery.trim() !== debouncedQuery.trim();
     const finalLoadingState = loading || isWaitingForTimer;
 
 
