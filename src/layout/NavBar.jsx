@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Sun, Moon, ShoppingCart, Menu, X } from "lucide-react";
-import { useTheme } from "../hooks/useTheme";
-import { ALLOWED_CATEGORIES } from "../config/shopConfig";
+import { Sun, Moon, Search, ShoppingCart, Menu, X } from "lucide-react";
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
-import SearchBar from "../components/SearchBar";
+import { ALLOWED_CATEGORIES } from "../config/shopConfig";
+import { useTheme } from "../hooks/useTheme";
 
 /* Link and NavLink
     They both navigate to a new view in a SPA without reloading the browser.
@@ -21,7 +20,7 @@ import SearchBar from "../components/SearchBar";
 
 /* ----- SUBCOMPONENT : LogoLink (Atom)----- */
 // Render the brand logo and name, linking back to the homepage. 
-function LogoLink({ onClick}) {
+function LogoLink({ onClick }) {
     return (
         <Link to="/" onClick={onClick} className="flex items-center gap-3 cursor-pointer select-none">
             <img 
@@ -40,7 +39,7 @@ function LogoLink({ onClick}) {
 
 /* ----- SUBCOMPONENT : DropdownMenu (Organism) ----- */
 // Render the responsive dropdown wrapper and its links tree hierarchy
-function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSearchSubmit}) {
+function DropdownMenu({ isOpen, onClose }) {
     // If the menu is closed, render absolutly nothing
     if (!isOpen) return null;
 
@@ -55,16 +54,19 @@ function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSear
         <nav className="w-full bg-brand-dark border-t border-white/10 px-4 py-6 flex flex-col gap-4 animate-fade-in
                         lg:absolute lg:right-4 lg:top-full lg:w-80 lg:rounded-2xl lg:shadow-2xl lg:border lg:border-white/10 lg:mt-2 ">
 
-            {/* Mobile search bar – automatically hidden on desktops via the built-in SearchBar classes */}
-            <SearchBar 
-                value={searchQuery} 
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onSubmit={handleSearchSubmit}
-                isMobile={true}
-            />
-
-            {/* A clean, structured block for all your shop routing links */}
+            {/* A clean, structured block for all webshop routing links */}
             <div className="flex flex-col gap-1.5">
+                <NavLink 
+                    to="/"
+                    end /* 'end' guarantees this only lights up when the path is exactly '/' */
+                    onClick={onClose}
+                    className={({ isActive }) => `text-white/80 font-black text-lg py-2 border-b border-white/10 transition-all pl-3 
+                                    block hover:text-brand-light hover:translate-x-1
+                    ${isActive ? "text-brand font-black bg-white/5 rounded-md pl-4 underline decoration-2 underline-offset-4" : ""}`}
+                >
+                    Home
+                </NavLink>
+
                 <Link 
                     to="/"
                     onClick={onClose}
@@ -118,17 +120,12 @@ function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSear
 export function NavBar(){
     const { theme, toggleTheme } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
 
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
-
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        console.log("Searching product catalog for: ", searchQuery);
-    };
-
+    
+    
     return(
         <>
             <header className="sticky top-0 z-40 bg-brand border-b border-black/10 shadow-md 
@@ -138,16 +135,20 @@ export function NavBar(){
                     {/* Brand Logo anchor block */}
                     <LogoLink onClick={closeMenu} />
 
-                    {/* Global desktop SearchBar */}
-                    <SearchBar
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onSubmit={handleSearchSubmit}
-                        isMobile={false}
-                    />
 
                     {/* Utility Controls (Cart, Theme toggle, Hamburger) */}
                     <div className="flex items-center gap-2 sm:gap-4">
+
+                        {/* Desktop and Mobile Global Search Trigger Link Anchor */}
+                        <Link 
+                            to="/search"
+                            onClick={closeMenu}
+                            className="text-white/90 hover:text-white transition-colors p-2
+                                        flex items-center justify-center relative hover:scale-105"
+                        >
+                            <Search className="w-5 h-5" />
+                            <span className="sr-only">Open global search view</span>
+                        </Link>
 
                         {/* Shopping Cart Link */}
                         <Link 
@@ -204,9 +205,6 @@ export function NavBar(){
                 <DropdownMenu 
                     isOpen={isMenuOpen}
                     onClose={closeMenu}
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    handleSearchSubmit={handleSearchSubmit}
                 />
 
             </header>
