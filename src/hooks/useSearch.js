@@ -11,7 +11,7 @@ import { useDebounce } from "./useDebounce";
 // debounce is used.
 // async/await and try/catch/finally is used.
 
-export function useSearch(searchQuery, onFetchComplete) {
+export function useSearch(searchQuery = "") {
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -20,7 +20,6 @@ export function useSearch(searchQuery, onFetchComplete) {
     // debouncedQuery will stay frozen and empty until the user takes a 4000 ms = 4 seconds(default value 300ms) pause from typing.
     // Here the delay is set to 4 seconds so the debounce will be clear to the user during the demo.
     const debouncedQuery = useDebounce(searchQuery, 4000);
-
 
     useEffect(() => {
         
@@ -33,19 +32,12 @@ export function useSearch(searchQuery, onFetchComplete) {
 
         async function executeSearch () {
             // FIXED FOR CASCADING RENDERS: 
-            // Moving setLoading and setError inside the async function wrapper isolates their execution state.
-            // This prevents React from flagging them as unsafe synchronous side-effects on the primary render frame.
+            // Keeping setLoading and setError safely inside the async wrapper completely erases 
+            // any unsafe synchronous render cascading errors.
             setLoading(true);
             setError(null);
 
-            // FIXED FOR THE OPENING LOOP BUG:
-            // We set a local trigger flag to true as soon as a active network request starts.
-            // This ensures we can distinguish between a newly finished search and an old search 
-            // that is simply resting in the background memory!
-            let didFetchPerform = false;
-
             try {
-                didFetchPerform = true; // Yes, an active fetch is performing right now!
                 const result = await searchProducts(debouncedQuery.trim());
                 const rawProducts = result.products || [];
 
@@ -56,22 +48,6 @@ export function useSearch(searchQuery, onFetchComplete) {
 
                 if (isMounted) {
                     setSearchResults(secureFilteredResults);  
-
-                    // LOOP-SECURE LIFECYCLE EVENT TRIGGER
-                    // The asynchronous server fetch has completed and data has landed safely!
-                    // 
-                    // 1. didFetchPerform: Guard flag. Ensures we only trigger this if a real fetch 
-                    //    just finished, preventing the menu from locking in an infinite closing loop.
-                    // 2. onFetchComplete & typeof: Defensive guards. Verifies that a valid callback 
-                    //    function was supplied by the parent to prevent throwing a runtime TypeError.
-                    // 
-                    // If all criteria are met, we execute the callback to let the calling component
-                    // safely orchestrate its own post-fetch actions (like closing layout menus).
-                    // =====================================================
-                    if (didFetchPerform && onFetchComplete && typeof onFetchComplete === "function") {
-                        onFetchComplete();
-                    }
-
                 }
 
             } catch (err) {
@@ -94,18 +70,27 @@ export function useSearch(searchQuery, onFetchComplete) {
 
         // EFFECT DEPENDENCIES
         // - debouncedQuery: Fires the search whenever the user types a new word.
-        // - onFetchComplete: Added to satisfy React's strict rules because it is used 
-        //   inside the code block. 
-        //   The function never changes during the program, and therefore it is 
-        //   100% safe to include it in the array without the page starting to load forever in an infinite loop.
-    }, [debouncedQuery, onFetchComplete]); 
+    }, [debouncedQuery]); 
+
+
+    // =========================================================================
+    // DYNAMIC DERIVED LOADING STATE (Kaskadsäker och smart laddtext)
+    // We check if the active user input has reached our minimum length of 3 letters,
+    // and if that input string is still different from the frozen debounced query.
+    // 
+    // If it matches these conditions, the 4-second timer is currently counting down!
+    // By dynamically calculating 'isWaitingForTimer' during flight, we can instantly
+    // fire up your loading animations on the screen WITHOUT triggering any unsafe,
+    // performance-reducing sync setState cascading render alerts inside the effect loop!
+    // =========================================================================
+    const hasValidLength = searchQuery.trim().length >= 3;
+    const isWaitingForTimer = hasValidLength && searchQuery.trim() !== debouncedQuery.trim();
+    const finalLoadingState = loading || isWaitingForTimer;
 
 
     // DYNAMIC DERIVED STATE (Instant UI Wiper utilizing a Ternary Operator)
     // The conditional operator (? :) dynamically evaluates the search status in mid-air:
-    // 
     // - Condition: (!searchQuery || searchQuery.trim() === "")
-    //   Translates to: "Is the query completely empty OR (||) containing only blank spaces?"
     // - If True (? []): Wipes the screen instantly by returning an empty array.
     // - If False (: searchResults): Passes the validated API products safely to the UI grid.
     const finalResults = (!searchQuery || searchQuery.trim() === "")
@@ -113,7 +98,6 @@ export function useSearch(searchQuery, onFetchComplete) {
             : searchResults;
         
 
-    return { searchResults: finalResults, loading, error };
+    // FIXED: We return finalLoadingState which combines our actual database state and our smart timer guard!
+    return { searchResults: finalResults, loading: finalLoadingState, error };
 }
-
-

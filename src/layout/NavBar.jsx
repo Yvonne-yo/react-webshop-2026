@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Sun, Moon, ShoppingCart, Menu, X } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import { Sun, Moon, Search, ShoppingCart, Menu, X } from "lucide-react";
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
 import { ALLOWED_CATEGORIES } from "../config/shopConfig";
 import { useTheme } from "../hooks/useTheme";
-import SearchBar from "../components/SearchBar";
 
 /* Link and NavLink
     They both navigate to a new view in a SPA without reloading the browser.
@@ -21,16 +20,9 @@ import SearchBar from "../components/SearchBar";
 
 /* ----- SUBCOMPONENT : LogoLink (Atom)----- */
 // Render the brand logo and name, linking back to the homepage. 
-function LogoLink({ onClick, setSearchQuery }) {
-    const handleLogoClick = () => {
-        // Instantly wipe out any text from the search field
-        // Run the standard closeMenu function
-        setSearchQuery("");
-        onClick();
-    }
-
+function LogoLink({ onClick }) {
     return (
-        <Link to="/" onClick={handleLogoClick} className="flex items-center gap-3 cursor-pointer select-none">
+        <Link to="/" onClick={onClick} className="flex items-center gap-3 cursor-pointer select-none">
             <img 
                 src={logoButterfly} 
                 alt="YoYo Webshop Logo"
@@ -47,7 +39,7 @@ function LogoLink({ onClick, setSearchQuery }) {
 
 /* ----- SUBCOMPONENT : DropdownMenu (Organism) ----- */
 // Render the responsive dropdown wrapper and its links tree hierarchy
-function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSearchChange, handleSearchSubmit}) {
+function DropdownMenu({ isOpen, onClose }) {
     // If the menu is closed, render absolutly nothing
     if (!isOpen) return null;
 
@@ -62,23 +54,12 @@ function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSear
         <nav className="w-full bg-brand-dark border-t border-white/10 px-4 py-6 flex flex-col gap-4 animate-fade-in
                         lg:absolute lg:right-4 lg:top-full lg:w-80 lg:rounded-2xl lg:shadow-2xl lg:border lg:border-white/10 lg:mt-2 ">
 
-            {/* Mobile search bar – automatically hidden on desktops via the built-in SearchBar classes */}
-            <SearchBar 
-                value={searchQuery} 
-                onChange={handleSearchChange}
-                onSubmit={handleSearchSubmit}
-                isMobile={true}
-            />
-
-            {/* A clean, structured block for all your shop routing links */}
+            {/* A clean, structured block for all webshop routing links */}
             <div className="flex flex-col gap-1.5">
                 <NavLink 
                     to="/"
                     end /* 'end' guarantees this only lights up when the path is exactly '/' */
-                    onClick={() => {
-                        setSearchQuery(""); // Clears the search field instantly
-                        onClose();         // Closes the mobile dropdown menu drawer
-                    }}
+                    onClick={onClose}
                     className={({ isActive }) => `text-white/80 font-black text-lg py-2 border-b border-white/10 transition-all pl-3 
                                     block hover:text-brand-light hover:translate-x-1
                     ${isActive ? "text-brand font-black bg-white/5 rounded-md pl-4 underline decoration-2 underline-offset-4" : ""}`}
@@ -136,43 +117,15 @@ function DropdownMenu({ isOpen, onClose, searchQuery, setSearchQuery, handleSear
 
 /* ----- MAIN COMPONENT : NavBar (Orchestrator) ----- */
 // Render the html-tag <header> which contains the webshop navigation bar
-export function NavBar({ searchQuery, setSearchQuery }){
+export function NavBar(){
     const { theme, toggleTheme } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    // Initialize router hook to be able to enforce redirects
-    const navigate = useNavigate();
 
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
     
-    /* ----- INTERCEPTION: handleSearchChange ----- */
-    // Simply capture keyboard keystrokes and update the state synchronously.
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
-    };
-
-
-    /* ----- INTERCEPTION: handleSearchSubmit ----- */
-    // When hitting Enter (or the mobile search button), the code prevents a standard browser refresh.
-    // 
-    // 1. GUARD CLAUSE (if): Evaluates if the query is empty or contains only spaces. If true, 
-    //    the code executes an early "return" to halt the function on the spot. This blocks the webshop 
-    //    from launching broken, empty redirect loops.
-    // 2. SUCCESSFUL EXECUTION: If text exists, the guard is skipped, the dropdown menu closes,
-    //    and programmatically routes the user to the SearchResultView
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-
-        if (!searchQuery || searchQuery.trim() === "") {
-            return;
-        }
-
-        closeMenu(); // Instantly close the dropdown menu panel at Enter or the Go/Searchbutton on mobile
-        navigate(`/search/${searchQuery.trim()}`); // Redirection trigger, handled by BrowserRouter in App.jsx
-    };
-
+    
     return(
         <>
             <header className="sticky top-0 z-40 bg-brand border-b border-black/10 shadow-md 
@@ -180,18 +133,22 @@ export function NavBar({ searchQuery, setSearchQuery }){
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
 
                     {/* Brand Logo anchor block */}
-                    <LogoLink onClick={closeMenu} setSearchQuery={setSearchQuery} />
+                    <LogoLink onClick={closeMenu} />
 
-                    {/* Desktop SearchBar */}
-                    <SearchBar
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        onSubmit={handleSearchSubmit}
-                        isMobile={false}
-                    />
 
                     {/* Utility Controls (Cart, Theme toggle, Hamburger) */}
                     <div className="flex items-center gap-2 sm:gap-4">
+
+                        {/* Desktop and Mobile Global Search Trigger Link Anchor */}
+                        <Link 
+                            to="/search"
+                            onClick={closeMenu}
+                            className="text-white/90 hover:text-white transition-colors p-2
+                                        flex items-center justify-center relative hover:scale-105"
+                        >
+                            <Search className="w-5 h-5" />
+                            <span className="sr-only">Open global search view</span>
+                        </Link>
 
                         {/* Shopping Cart Link */}
                         <Link 
@@ -248,10 +205,6 @@ export function NavBar({ searchQuery, setSearchQuery }){
                 <DropdownMenu 
                     isOpen={isMenuOpen}
                     onClose={closeMenu}
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    handleSearchChange={handleSearchChange}
-                    handleSearchSubmit={handleSearchSubmit}
                 />
 
             </header>
