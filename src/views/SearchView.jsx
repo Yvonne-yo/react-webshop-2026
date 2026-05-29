@@ -40,7 +40,7 @@ export default function SearchView() {
                      text-slate-900 placeholder-text-slate-500 focus:outline-none focus:border-brand 
                      transition-all shadow-sm font-medium text-sm"
         />
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
       </div>
 
       {/* PHASE 1: LIFECYCLE INTERCEPTION - LOADING TIMERS */}
@@ -54,18 +54,18 @@ export default function SearchView() {
         
       )}
 
-        {/* PHASE 3: NO PRODUCTS FOUND NOTICE */}
-        {/* Checks that text exists, loading is complete, but backend array is empty! */}
-         {!hasResults && isSearching && !loading && (
-          <div className="text-center py-10 bg-bg-card dark:bg-black/20 border border-text-muted/20 dark:border-white/20 rounded-2xl mb-14 animate-fade-in max-w-xl mx-auto px-6 shadow-sm">
-            <p className="text-text-main dark:text-white font-black text-lg mb-1.5 tracking-tight">
-              No products found
-            </p>
-            <p className="text-text-muted dark:text-white/80 text-sm font-medium leading-relaxed">
-              We couldn't find any premium beauty items matching <span className="text-brand font-bold">"{searchInput}"</span>.
-            </p>
-          </div>
-        )}
+      {/* PHASE 3: NO PRODUCTS FOUND NOTICE */}
+      {/* Checks that text exists, loading is complete, but backend array is empty! */}
+        {!hasResults && isSearching && !loading && (
+        <div className="text-center py-10 bg-bg-card dark:bg-black/20 border border-text-muted/20 dark:border-white/20 rounded-2xl mb-14 animate-fade-in max-w-xl mx-auto px-6 shadow-sm">
+          <p className="text-text-main dark:text-white font-black text-lg mb-1.5 tracking-tight">
+            No products found
+          </p>
+          <p className="text-text-muted dark:text-white/80 text-sm font-medium leading-relaxed">
+            We couldn't find any premium beauty items matching <span className="text-brand font-bold">"{searchInput}"</span>.
+          </p>
+        </div>
+      )}
 
 
       {/* PHASE 4: MAIN INTERFACE RENDERING - RESULTS GRID */}
