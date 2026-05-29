@@ -64,6 +64,13 @@ export function useSearch(searchQuery = "") {
 
         executeSearch();
 
+        // Memory leak cleanup protection mechanism
+        // 
+        // Why it's used: If a user types very fast and leaves/closes this panel before
+        // the asynchronous fetch arrives from the server, React will try to run
+        // setSearchResults on a component that is no longer on the screen.
+        // That causes memory leaks. By setting isMounted to false during unmount,
+        // we safely cancel any trailing state updates in mid-air!
         return () => {
             isMounted = false;
         };
@@ -72,22 +79,17 @@ export function useSearch(searchQuery = "") {
         // - debouncedQuery: Fires the search whenever the user types a new word.
     }, [debouncedQuery]); 
 
-// SMART TIMER LOADER (Loading Screen Synchronization)
-//
-// How it works:
-// As soon as you press a key (e.g. type "l"), the 'searchQuery' changes immediately.
-// But the 'debouncedQuery' is still there and completely empty for another 4 seconds!
-//
-// JavaScript compares these two: Is "l" different from ""? Yes! That means the timer is counting down
-// right now. Then we force 'finalLoadingState' to be TRUE immediately.
-// This makes the loader spinner start on the screen the same microsecond you press
-// on the keyboard, instead of waiting 4 seconds for the API fetch to start!
-  
-    // DYNAMIC DERIVED LOADING STATE
-    // If it matches these conditions, the 4-second timer is currently counting down!
-    // By dynamically calculating 'isWaitingForTimer' during flight, we can instantly
-    // fire up the loading animations on the screen WITHOUT triggering any unsafe,
-    // performance-reducing sync setState cascading render alerts inside the effect loop!
+
+    // SMART TIMER LOADER (Loading Screen Synchronization)
+    //
+    // How it works:
+    // As soon as you press a key (e.g. type "l"), the 'searchQuery' changes immediately.
+    // But the 'debouncedQuery' is still there and completely empty for another 4 seconds!
+    //
+    // JavaScript compares these two: Is "l" different from ""? Yes! That means the timer is counting down
+    // right now. Then we force 'finalLoadingState' to be TRUE immediately.
+    // This makes the loader spinner start on the screen the same microsecond the user presses
+    // on the keyboard, instead of waiting 4 seconds for the API fetch to start!
     const isWaitingForTimer = searchQuery.trim() !== debouncedQuery.trim();
     const finalLoadingState = loading || isWaitingForTimer;
 
@@ -102,6 +104,6 @@ export function useSearch(searchQuery = "") {
             : searchResults;
         
 
-    // FIXED: We return finalLoadingState which combines our actual database state and our smart timer guard!
+    // Return finalLoadingState which combines the actual database state and the smart timer guard!
     return { searchResults: finalResults, loading: finalLoadingState, error };
 }

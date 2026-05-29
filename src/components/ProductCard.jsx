@@ -1,18 +1,21 @@
+import { Link } from "react-router-dom";
+import { ShoppingBag } from "lucide-react";
+
 /* ----- COMPONENT ProductCard ----- */
 // A reusable presentation component that renders a product card.
 // Shared across both main storefront grids and dynamic category collection feeds.
 
-// src/components/ProductCard.jsx
-
-/**
- * COMPONENT: ProductCard
- * A reusable presentation component that renders a uniform, accessible e-commerce product card.
- * Shared across both main storefront grids and dynamic category collection feeds.
- */
 export function ProductCard({ product }) {
   return (
-    <div className="bg-bg-card p-5 rounded-2xl border border-text-muted/10 shadow-xs hover:shadow-md hover:border-brand/20 transition-all duration-300 group flex flex-col justify-between">
-      
+    // Link wrapping the ProductCard making the whole card clickadble. 
+    // This programmatically routes the user straight to the ProductDetailView layout canvas.
+    <Link
+      to={`/products/${product.id}`}
+      className="bg-bg-card p-4 rounded-xl border border-text-muted/10 shadow-xs 
+                 flex flex-col justify-between hover:scale-102 hover:shadow-md 
+                 transition-all duration-300 cursor-pointer group"
+    >
+
       {/* Upper Layout Box: Image and Metadata texts */}
       <div>
         {/* Product Thumbnail Image Container Area */}
@@ -50,7 +53,7 @@ export function ProductCard({ product }) {
         </button>
       </div>
 
-    </div>
+    </Link>
   );
 }
 

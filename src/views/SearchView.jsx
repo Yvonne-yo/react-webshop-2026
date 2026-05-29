@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Loader2, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useSearch } from "../hooks/useSearch";
 import { ProductCard } from "../components/ProductCard";
+import BoutiqueLoader from "../components/BoutiqueLoader";
+import BoutiqueError from "../components/BoutiqueError";
 
 export default function SearchView() {
   const [searchInput, setSearchInput] = useState("");
@@ -38,39 +40,32 @@ export default function SearchView() {
                      text-slate-900 placeholder-text-slate-500 focus:outline-none focus:border-brand 
                      transition-all shadow-sm font-medium text-sm"
         />
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
       </div>
 
-      {/* PHASE 1: LIFECYCLE INTERCEPTION - LOADING TIMERS WORK LIVE HERE */}
+      {/* PHASE 1: LIFECYCLE INTERCEPTION - LOADING TIMERS */}
       {loading && (
-        <div className="flex flex-col items-center justify-center py-16 text-brand">
-          <Loader2 className="w-10 h-10 animate-spin mb-4" />
-          <p className="text-text-brand font-bold text-sm tracking-wide">
-            Processing "{searchInput}" in 4000ms...
-          </p>
-        </div>
+        <BoutiqueLoader message={`Processing "${searchInput}" in 4000ms...`} />  
       )}
 
       {/* PHASE 2: LIFECYCLE INTERCEPTION - ERROR HANDLING */}
       {error && !loading && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-2xl text-center my-6 max-w-xl mx-auto">
-          <h4 className="font-black text-lg mb-2">Search Failure</h4>
-          <p className="text-sm font-medium">{error}</p>
-        </div>
+        <BoutiqueError title="Search Failure" message={error} />
+        
       )}
 
-        {/* PHASE 3: NO PRODUCTS FOUND NOTICE */}
-        {/* Checks that text exists, loading is complete, but backend array is empty! */}
-         {!hasResults && isSearching && !loading && (
-          <div className="text-center py-10 bg-bg-card dark:bg-black/20 border border-text-muted/20 dark:border-white/20 rounded-2xl mb-14 animate-fade-in max-w-xl mx-auto px-6 shadow-sm">
-            <p className="text-text-main dark:text-white font-black text-lg mb-1.5 tracking-tight">
-              No products found
-            </p>
-            <p className="text-text-muted dark:text-white/80 text-sm font-medium leading-relaxed">
-              We couldn't find any premium beauty items matching <span className="text-brand font-bold">"{searchInput}"</span>.
-            </p>
-          </div>
-        )}
+      {/* PHASE 3: NO PRODUCTS FOUND NOTICE */}
+      {/* Checks that text exists, loading is complete, but backend array is empty! */}
+        {!hasResults && isSearching && !loading && (
+        <div className="text-center py-10 bg-bg-card dark:bg-black/20 border border-text-muted/20 dark:border-white/20 rounded-2xl mb-14 animate-fade-in max-w-xl mx-auto px-6 shadow-sm">
+          <p className="text-text-main dark:text-white font-black text-lg mb-1.5 tracking-tight">
+            No products found
+          </p>
+          <p className="text-text-muted dark:text-white/80 text-sm font-medium leading-relaxed">
+            We couldn't find any premium beauty items matching <span className="text-brand font-bold">"{searchInput}"</span>.
+          </p>
+        </div>
+      )}
 
 
       {/* PHASE 4: MAIN INTERFACE RENDERING - RESULTS GRID */}
