@@ -1,3 +1,6 @@
+
+/* ----- LAYOUT COMPONENT: Footer ----- */
+
 export function Footer() {
   return (
     <div>

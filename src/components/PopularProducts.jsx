@@ -1,6 +1,9 @@
-import { Sparkles, Loader2, Search } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useFeaturedProducts } from "../hooks/useFeaturedProducts";
 import { ProductCard } from "./ProductCard";
+import BoutiqueLoader from "./BoutiqueLoader";
+import BoutiqueError from "./BoutiqueError";
+
 
 /* ----- COMPONENT PopularProducts ----- */
 // Render "This Week's Most Popular Products" to the storefront HomeView
@@ -12,24 +15,12 @@ export default function PopularProducts() {
 
 	// State interception: loading
 	if (loading) {
-		return (
-			<div className="flex flex-col items-center justify-center py-20 text-brand">
-				<Loader2 className="w-10 h-10 animate-spin mb-4" />
-				<p className="text-text-muted font-bold text-sm tracking-wide">
-				    Assembling curated favorites...
-				</p>
-			</div>
-		);
+		return <BoutiqueLoader message="Assembling curated favorites..." />;
 	}
 
 	// State interception: error handling
 	if (error) {
-		return (
-      		<div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-2xl text-center my-10 max-w-xl mx-auto">
-        		<h4 className="font-black text-lg mb-2">Catalogue Failure</h4>
-        		<p className="text-sm font-medium">{error}</p>
-      		</div>
-    	);
+		return <BoutiqueError title="Catalogue Failure" message={error} />;
 	}
 
 	// Empty state protection
@@ -44,7 +35,7 @@ export default function PopularProducts() {
     return (
         <section className="container mx-auto px-4 pb-16">
 
-            {/* ----- Section Heading Row (Switches text and icons based on context) ----- */}
+            {/* ----- Section Heading Row ----- */}
             <div className="flex items-center gap-3 mb-8 pb-3 border-b border-text-muted/10">
                 <Sparkles className="w-5 h-5 text-brand" />
                 <h3 className="text-font-size-h3 font-black text-text-main tracking-tight">
@@ -52,10 +43,8 @@ export default function PopularProducts() {
                 </h3>
             </div>
 	
-            
-			
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-grid-gap">
+            {/* ----- Section Render Products ----- */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-grid-gap">
                 {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}

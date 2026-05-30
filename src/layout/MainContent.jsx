@@ -1,4 +1,6 @@
 
+/* ----- LAYOUT COMPONENT: MainContent ----- */
+
 export function MainContent ( {children} ){
     return(
         <div>

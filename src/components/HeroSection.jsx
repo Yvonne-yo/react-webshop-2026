@@ -1,5 +1,7 @@
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
 
+/* ----- COMPONENT: HeroSection ----- */
+
 /* ----- BOX 1: WelcomeStrip - The top text banner. ----- */
 function WelcomeStrip() {
   return (
