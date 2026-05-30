@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
+/* ----- PROVIDER COMPONENT: ThemeProvider ----- */
+// Provider of light/dark mode feature.
 export default function ThemeProvider({ children }) {
   // Initiate state by using an arrow function that will only execute once, when the component is mounted.
   // Theme will always be intiated by valid values "dark" or "light" , from localStorage or OS.
@@ -12,6 +14,7 @@ export default function ThemeProvider({ children }) {
     const savedTheme = localStorage.getItem("YoYo_webshop_theme");
     const validThemes = ["light", "dark"];
 
+    // Defensive validation to ensure only a valid value is returned, avoiding corrupted data.
     if (savedTheme && validThemes.includes(savedTheme)) {
       return savedTheme;
     }
