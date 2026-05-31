@@ -103,18 +103,17 @@ export function ProductCard({ product }) {
         {/* clicking on the number or margins does not trigger the link navigation. */}
         <div 
           onClick={(e) => {e.preventDefault(); e.stopPropagation(); }}
-          className="w-full sm:w-auto sm:min-w-30 flex items-center justify-end"
+          className="w-full sm:w-32 flex items-center justify-end">
       
-        >
+        
           {!existingCartItem 
             ? ( 
               /* STATE 1: INITIAL PURCHASE CALL-TO-ACTION */
               <button 
                 onClick={handleAddToCartClick}
-                className="whitespace-nowrap bg-brand hover:bg-brand-dark text-white font-bold text-xs py-2 px-4 rounded-lg transition 
-                            cursor-pointer shadow-xs active:scale-95 text-center flex-1 sm:flex-none"
-                aria-label={`Add ${product.title} to shopping cart`}
-              >
+                className="w-full h-8 flex items-center justify-center whitespace-nowrap bg-brand hover:bg-brand-dark text-white font-bold text-xs px-4 rounded-lg transition cursor-pointer shadow-xs active:scale-95 text-center"
+              aria-label={`Add ${product.title} to shopping cart`}
+            >
                 Add to cart
               </button>
 
@@ -122,13 +121,15 @@ export function ProductCard({ product }) {
 
               /* STATE 2: REUSABLE MOUNTED STEP QUANTITY CONTROLLER ATOM */
               // Injects the click capturing handlers directly into the structural hooks
-              <QuantityController
-                quantity={existingCartItem.quantity}
-                onIncrement={handleIncrementClick}
-                onDecrement={handleDecrementClick}
-                maxLimit={MAX_ALLOWED_QUANTITY}
-              />
-
+              <div className="w-full sm:w-32 flex items-center justify-end">
+                <QuantityController
+                  quantity={existingCartItem.quantity}
+                  onIncrement={handleIncrementClick}
+                  onDecrement={handleDecrementClick}
+                  maxLimit={MAX_ALLOWED_QUANTITY}
+                  heightClass="h-8"   // Height to match State 1 button
+                />
+              </div>
             )}
 
         </div>

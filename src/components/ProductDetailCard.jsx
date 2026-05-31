@@ -1,10 +1,46 @@
 import { ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
+import QuantityController from "./QuantitiyController";
 
 /* ----- COMPONENT: ProductDetailCard ----- */
 // Renders an expanded, detailed presentation interface for a singular product instance.
 // Mirrors the established look-and-feel of the atomic ProductCard components.
+
 export default function ProductDetailCard({ product }) {
+    // Extract global cart state and mutation methods from the hook
+    const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
+
+    // Standardized ceiling constraint to enforce catalog safety bounds (max 99 items)
+    const MAX_ALLOWED_QUANTITY = 99;
+    
+    // System lookup to see if this product already exists in the cart array
+    const existingCartItem = cartItems.find((item) => item.id === product.id);
+
+    /* ----- INTERACTIVE INTERACTION HANDLERS ----- */
+    // Performs changes on the global shopping cart state.
+    // Note: No event shielding (preventDefault/stopPropagation) is required here,
+    // as this component does not reside inside a parent anchor Link tag.
+	const handleAddToCart = () => {
+        addToCart(product, 1); 	
+	};
+
+    const handleIncrement = () => {
+        if (existingCartItem && existingCartItem.quantity < MAX_ALLOWED_QUANTITY) {
+            updateQuantity(product.id, existingCartItem.quantity + 1);
+        }
+    };
+
+    const handleDecrement = () => {
+        if (existingCartItem) {
+        if (existingCartItem.quantity <= 1) {
+            removeFromCart(product.id);
+            } else {
+            updateQuantity(product.id, existingCartItem.quantity - 1);
+            }
+        }
+  };
+    
     return (
         <div className="bg-bg-card p-6 md:p-10 rounded-2xl border border-text-muted/10 shadow-xs my-12 max-w-4xl mx-auto">
             {/* Symmetrical Two-Column Layout Grid */}
@@ -45,7 +81,7 @@ export default function ProductDetailCard({ product }) {
                         </div>
                     </div>
 
-                    {/* Lower Layout Block: Price tag and Cart Action button row */}
+                    {/* Lower Layout Block: Price and Transforming Action Button Footer */}
                     {/* Isolated at the bottom to guarantee rigid alignment with the visual image anchor */}
                     <div className="flex flex-col gap-4 mt-6 pt-4 border-t border-text-muted/5">
                         {/* Pricing Identification */}
@@ -58,13 +94,36 @@ export default function ProductDetailCard({ product }) {
                             </span>
                         </div>
 
-                        {/* Interactive Checkout Action Trigger Button */}
-                        <button
-                            className="w-full h-12 bg-brand hover:bg-brand-dark text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-xs transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2"
-                            aria-label={`Add ${product.title} to luxury boutique shopping cart`}
-                        >
-                            <ShoppingBag className="w-4 h-4" /> Add to cart
-                        </button>
+                        {/* BUTTON FIELD: Intercepted Cart Trigger */}
+				        {/* BUTTONS using the event handlers to change the cart */}
+                        {/* If the product does NOT exist in the cart, show the "Add to cart"-button */}
+                        {/* If the product already does exist in the cart, show the QuantityController-button. */}
+                        {/* QuantityController-button consists of Plus and Minus buttons and displays the current quantity for the product. */}
+                        <div className="w-full">
+                            {!existingCartItem 
+                                ? (
+                                    /* STATE 1: INITIAL PURCHASE CALL-TO-ACTION */
+                                    <button 
+                                        onClick={handleAddToCart}
+                                        className="w-full h-12 bg-brand hover:bg-brand-dark text-white font-black text-sm uppercase tracking-wider rounded-lg shadow-xs transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+                                        aria-label={`Add ${product.title} to shopping cart`}
+                                    >
+                                        <ShoppingBag className="w-4 h-4" /> Add to cart
+                                    </button>
+            
+                            ) : (
+                                /* STATE 2: TRANSFORMED STEP QUANTITY CONTROLLER PANEL */
+                                    // Injects the click capturing handlers directly into the structural hooks
+                                    <QuantityController
+                                        quantity={existingCartItem.quantity}
+                                        onIncrement={handleIncrement}
+                                        onDecrement={handleDecrement}
+                                        maxLimit={MAX_ALLOWED_QUANTITY}
+                                        heightClass="h-12"  // Height to match State 1 button
+                                    />
+                            )}
+
+                        </div>
                     </div>
                 </div>
             </div>
