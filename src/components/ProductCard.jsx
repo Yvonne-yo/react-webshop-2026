@@ -121,15 +121,14 @@ export function ProductCard({ product }) {
 
               /* STATE 2: REUSABLE MOUNTED STEP QUANTITY CONTROLLER ATOM */
               // Injects the click capturing handlers directly into the structural hooks
-              <div className="w-full sm:w-32 flex items-center justify-end">
-                <QuantityController
-                  quantity={existingCartItem.quantity}
-                  onIncrement={handleIncrementClick}
-                  onDecrement={handleDecrementClick}
-                  maxLimit={MAX_ALLOWED_QUANTITY}
-                  heightClass="h-8"   // Height to match State 1 button
-                />
-              </div>
+              <QuantityController
+                quantity={existingCartItem.quantity}
+                onIncrement={handleIncrementClick}
+                onDecrement={handleDecrementClick}
+                maxLimit={MAX_ALLOWED_QUANTITY}
+                heightClass="h-8"   // Height to match State 1 button
+              />
+              
             )}
 
         </div>
