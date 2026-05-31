@@ -1,3 +1,6 @@
+
+/* ----- COMPONENT: BrandTagLine ----- */
+
 export default function BrandTagLine(){
     return(
         <section className="text-center py-8 bg-bg-main transition-colors duration-300">

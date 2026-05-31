@@ -4,6 +4,7 @@ import { Sun, Moon, Search, ShoppingCart, Menu, X } from "lucide-react";
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
 import { ALLOWED_CATEGORIES } from "../config/shopConfig";
 import { useTheme } from "../hooks/useTheme";
+import { useCart } from "../hooks/useCart";
 
 /* Link and NavLink
     They both navigate to a new view in a SPA without reloading the browser.
@@ -17,6 +18,7 @@ import { useTheme } from "../hooks/useTheme";
              to show the user exactly which page they are visiting.
 */
 
+/* ----- LAYOUT COMPONENT: NavBar ----- */
 
 /* ----- SUBCOMPONENT : LogoLink (Atom)----- */
 // Render the brand logo and name, linking back to the homepage. 
@@ -119,6 +121,7 @@ function DropdownMenu({ isOpen, onClose }) {
 // Render the html-tag <header> which contains the webshop navigation bar
 export function NavBar(){
     const { theme, toggleTheme } = useTheme();
+    const { totalItemsCount } = useCart();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const closeMenu = () => {
@@ -155,9 +158,19 @@ export function NavBar(){
                             to="/cart"
                             onClick={closeMenu}
                             className="text-white/90 hover:text-white transition-colors p-2
-                                        flex items-center justify-center relative"
+                                        flex items-center justify-center relative group"
                         >
-                            <ShoppingCart className="w-5 h-5" />
+                            <ShoppingCart className="w-5 h-5 group-hover:scale-105 transition-transform" />
+                        
+                            {/* DYNAMIC CART BADGE COUNTER */}
+                            {/* Renders only when the basket contains one or more verified products */}
+                            {totalItemsCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white font-black text-[10px] 
+                                                 w-4 h-4 rounded-full flex items-center justify-center shadow-sm 
+                                                 animate-fade-in whitespace-nowrap min-w-4 px-0.5 border border-brand">
+                                    {totalItemsCount}
+                                </span>
+                            )}                        
                             <span className="sr-only">Open shopping cart view</span>
                         </Link>
 
@@ -165,7 +178,7 @@ export function NavBar(){
                         <button
                             onClick={toggleTheme}
                             className="p-2 rounded-lg bg-white/10 border border-white/20 text-white
-                                        hover:text-white/20 transition-colors cursor-pointer
+                                        hover:bg-white/20 transition-colors cursor-pointer
                                         flex items-center justify-center"
                         >
                             {theme === "dark"

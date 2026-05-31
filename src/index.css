@@ -8,7 +8,9 @@
 /* Theme variables instruct Tailwind to create new utility classes that I can use in my project. */
 @theme {
   --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
   --font-open-sans: "Open Sans Variable", sans-serif;
 
   /* Webshop brand colors  */     /* Logotype butterfly color rgb(7 130 189) */
