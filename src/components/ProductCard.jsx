@@ -1,24 +1,49 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import QuantityController from "./QuantitiyController";
 
 /* ----- COMPONENT ProductCard ----- */
 // A reusable presentation component that renders a product card.
 // Shared across both main storefront grids and dynamic category collection feeds.
 
 export function ProductCard({ product }) {
-  // Initialize global checkout action
-  const { addToCart } = useCart();
+  // Extract global cart state and mutation methods from the hook
+  const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
 
-  // Event handler
-	// Intercepts the click event to prevent the parent <Link> container 
-  // from routing the user away to the ProductDetailView canvas during a cart insertion.
+  // System lookup to see if this product already exists in the cart array
+  const existingCartItem = cartItems.find((item) => item.id === product.id);
+
+
+  /* ----- INTERACTIVE INTERACTION HANDLERS ----- */
+  // Performs changes on the global shopping cart state.
+  // It stops the click action from moving up to the parent page link (event bubbling)
+  // by stopping it immediately on the first line (preventDefault and stopPropagation).
+  // This blocks the link navigation from being triggered before React redraws the screen (re-render).
 	const handleAddToCartClick = (e) => {
-		e.preventDefault(); 		// Blocks the browser default anchor link behavior
-		e.stopPropagation();		// Stops the event from bubbling up to the outer <Link>
+		e.preventDefault(); 
+		e.stopPropagation();
+		addToCart(product, 1); 	
+	};
 
-		addToCart(product, 1); 	// Executes the secure global state action
-	}
+  const handleIncrementClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (existingCartItem && existingCartItem.quantity < 99) {
+      updateQuantity(product.id, existingCartItem.quantity + 1);
+    }
+  };
 
+  const handleDecrementClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (existingCartItem) {
+      if (existingCartItem.quantity <= 1) {
+        removeFromCart(product.id);
+      } else {
+        updateQuantity(product.id, existingCartItem.quantity - 1);
+      }
+    }
+  };
 
   return (
     // Link wrapping the ProductCard making the whole card clickable. 
@@ -53,26 +78,58 @@ export function ProductCard({ product }) {
         </h4>
       </div>
       
-      {/* Lower Layout Box: Price and Action Button Footers Row */}
+      {/* Lower Layout Box: Price and Transforming Action Button Footer */}
       {/* Isolated safely outside the text div to guarantee rigid vertical alignment */}
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-2 border-t border-text-muted/5">
-        <span className="font-black text-text-main text-lg">
+      {/* Enforced single-line text layout using whitespace-nowrap */}
+
+      {/* Price */}
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-2 border-t border-text-muted/5 min-h-13" >
+        <span className="font-black text-text-main text-lg whitespace-nowrap">
           ${product.price.toFixed(2)}
         </span>
 
-				{/* REQUIRED PROMPT BUTTON FIELD: Intercepted Cart Trigger */}
-				{/* BUTTON using the event handler to add the product to the cart */}
-        {/* Enforced single-line text layout using whitespace-nowrap */}
-        <button 
-					onClick={handleAddToCartClick}
-          className="whitespace-nowrap bg-brand hover:bg-brand-dark text-white font-bold text-xs py-2 px-4 rounded-lg transition 
-											cursor-pointer shadow-xs active:scale-95 text-center flex-1 sm:flex-none"
-          aria-label={`Add ${product.title} to shopping cart`}
+				{/* BUTTON FIELD: Intercepted Cart Trigger */}
+				{/* BUTTONS using the event handlers to change the cart */}
+        {/* If the product does NOT exist in the cart, show the "Add to cart"-button */}
+        {/* If the product already do exist in the cart, show the QuantityController-button. */}
+        {/* QuantityController-button consists of Plus and Minus buttons and displays the current quantity for the product. */}
+        
+        {/* DEFENSIVE EVENT PROPAGATION SHIELD (Click protection) */}
+        {/* The onClick handler on this div stops any clicks inside the panel from */}
+        {/* moving up to the parent page link (blocks event bubbling). This ensures that */}
+        {/* clicking on the number or margins does not trigger the link navigation. */}
+        <div 
+          onClick={(e) => {e.preventDefault(); e.stopPropagation(); }}
+          className="w-full sm:w-auto sm:min-w-30 flex items-center justify-end"
+      
         >
-          Add to cart
-        </button>
-      </div>
+          {!existingCartItem 
+            ? ( 
+              /* STATE 1: INITIAL PURCHASE CALL-TO-ACTION */
+              <button 
+                onClick={handleAddToCartClick}
+                className="whitespace-nowrap bg-brand hover:bg-brand-dark text-white font-bold text-xs py-2 px-4 rounded-lg transition 
+                            cursor-pointer shadow-xs active:scale-95 text-center flex-1 sm:flex-none"
+                aria-label={`Add ${product.title} to shopping cart`}
+              >
+                Add to cart
+              </button>
 
+            ) : (
+
+              /* STATE 2: REUSABLE MOUNTED STEP QUANTITY CONTROLLER ATOM */
+              // Injects the click capturing handlers directly into the structural hooks
+              <QuantityController
+                quantity={existingCartItem.quantity}
+                onIncrement={handleIncrementClick}
+                onDecrement={handleDecrementClick}
+                maxLimit={99}
+              />
+
+            )}
+
+        </div>
+      </div>
     </Link>
   );
 }
