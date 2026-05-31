@@ -10,6 +10,9 @@ export function ProductCard({ product }) {
   // Extract global cart state and mutation methods from the hook
   const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
 
+  // Standardized ceiling constraint to enforce catalog safety bounds (max 99 items)
+  const MAX_ALLOWED_QUANTITY = 99;
+
   // System lookup to see if this product already exists in the cart array
   const existingCartItem = cartItems.find((item) => item.id === product.id);
 
@@ -28,7 +31,7 @@ export function ProductCard({ product }) {
   const handleIncrementClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (existingCartItem && existingCartItem.quantity < 99) {
+    if (existingCartItem && existingCartItem.quantity < MAX_ALLOWED_QUANTITY) {
       updateQuantity(product.id, existingCartItem.quantity + 1);
     }
   };
@@ -123,7 +126,7 @@ export function ProductCard({ product }) {
                 quantity={existingCartItem.quantity}
                 onIncrement={handleIncrementClick}
                 onDecrement={handleDecrementClick}
-                maxLimit={99}
+                maxLimit={MAX_ALLOWED_QUANTITY}
               />
 
             )}
