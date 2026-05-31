@@ -94,7 +94,7 @@ export function ProductCard({ product }) {
 				{/* BUTTON FIELD: Intercepted Cart Trigger */}
 				{/* BUTTONS using the event handlers to change the cart */}
         {/* If the product does NOT exist in the cart, show the "Add to cart"-button */}
-        {/* If the product already do exist in the cart, show the QuantityController-button. */}
+        {/* If the product already does exist in the cart, show the QuantityController-button. */}
         {/* QuantityController-button consists of Plus and Minus buttons and displays the current quantity for the product. */}
         
         {/* DEFENSIVE EVENT PROPAGATION SHIELD (Click protection) */}
