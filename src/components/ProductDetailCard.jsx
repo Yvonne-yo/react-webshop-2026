@@ -33,11 +33,11 @@ export default function ProductDetailCard({ product }) {
 
     const handleDecrement = () => {
         if (existingCartItem) {
-        if (existingCartItem.quantity <= 1) {
-            removeFromCart(product.id);
-            } else {
-            updateQuantity(product.id, existingCartItem.quantity - 1);
-            }
+            if (existingCartItem.quantity <= 1) {
+                removeFromCart(product.id);
+                } else {
+                updateQuantity(product.id, existingCartItem.quantity - 1);
+                }
         }
   };
     
