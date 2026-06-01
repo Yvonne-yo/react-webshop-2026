@@ -1,7 +1,7 @@
 import { ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
-import QuantityController from "./QuantitiyController";
+import QuantityController from "./QuantityController";
 
 /* ----- COMPONENT: ProductDetailCard ----- */
 // Renders an expanded, detailed presentation interface for a singular product instance.

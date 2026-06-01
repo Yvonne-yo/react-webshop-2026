@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
-import QuantityController from "./QuantitiyController";
+import QuantityController from "./QuantityController";
 
 /* ----- COMPONENT ProductCard ----- */
 // A reusable presentation component that renders a product card.
