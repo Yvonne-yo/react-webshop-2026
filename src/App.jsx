@@ -8,6 +8,7 @@ import HomeView from "./views/HomeView";
 import AboutView from "./views/AboutView";
 import CartView from "./views/CartView";
 import CategoryView from "./views/CategoryView";
+import CheckoutView from "./views/CheckoutView";
 import ContactView from "./views/ContactView";
 import ProductDetailView from "./views/ProductDetailView";
 import SearchView from "./views/SearchView";
@@ -34,6 +35,7 @@ export default function App() {
                 <Route path="/about" element={<AboutView />} />
                 <Route path="/cart" element={<CartView />} />
                 <Route path="/category/:categoryName" element={<CategoryView />} />
+                <Route path="/checkout" element={<CheckoutView />} />
                 <Route path="/contact" element={<ContactView />} />
                 <Route path="/products/:productId" element={<ProductDetailView />} />
                 <Route path="/search" element={<SearchView />} />
