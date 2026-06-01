@@ -1,5 +1,4 @@
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import ReturnToHomeLink from "./ReturnToHomeLink";
 
 /* ----- COMPONENT: BoutiqueError (Atom) ----- */
 // A unified, reusable error state interface designed to isolate 
@@ -23,12 +22,9 @@ export default function BoutiqueError({
             </div>
 
             {/* Safe navigational anchor routing back to main hub */}
-            <Link 
-                to="/" 
-                className="text-brand hover:underline font-bold text-sm inline-flex items-center gap-2 transition-colors"
-            >
-                <ArrowLeft className="w-4 h-4" /> Return to boutique home
-            </Link>
+            <div className="flex justify-center">
+                <ReturnToHomeLink />
+            </div>
     </div>
     ); 
 }
