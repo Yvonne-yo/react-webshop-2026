@@ -55,17 +55,15 @@ Projektredovisning Demo av webbplats och kod 2026-06-09
 ### Installera och starta projektet
 1) Github repo:<br>
 git clone https://github.com/Yvonne-yo/react-webshop-2026.git
-
-2) Öppna VScode<br>
-* Öppna folder react-webshop-2026<br>
-* Öppna terminalen (Git Bash)<br>
+2) Öppna VScode
+* Öppna folder react-webshop-2026
+* Öppna terminalen (Git Bash)
 * Installera genom att köra kommando:<br>
-npm install<br>
+npm install
 * Starta genom att köra kommando:<br>
-npm run dev<br>
-
+npm run dev
 4) Öppna webläsaren och öppna länken:<br>
-http://localhost:5173/<br>
+http://localhost:5173/
 
 Nu hälsas du välkommen till YoYo webshop!
 
