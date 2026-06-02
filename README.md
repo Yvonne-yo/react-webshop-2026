@@ -1,8 +1,13 @@
 ## Välkommen till mitt projektarbete Bygga en Webshop med React 2026!
 Projektarbete i kurserna:
-Frontend Ramverk/Bibliotek (React, Angular)
-JavaScript Avancerat
-### Projektbeskrivning
+* Frontend Ramverk/Bibliotek (React, Angular)
+* JavaScript Avancerat
+### Innehållsförteckning
+- Projektbeskrivning
+- Installera och starta projektet
+- Beskrivning av implementationen
+  
+### <a id="proj"></a>Projektbeskrivning
 En React-applikation skapas från grunden med externa API-anrop och grundläggande funktionalitet för e-handel.
 
 Målet med projektet är att skapa en enkel men funktionell webshop där användare kan:
@@ -46,5 +51,12 @@ Projektet kommer att bedömas utifrån följande kriterier:
 
 ### Projektredovising
 Projektredovisning Demo av webbplats och kod 2026-06-09
+
+### Installera och starta projektet
+
+
+### Beskrivning av implementationen
+
+
 ### SLUT
 
