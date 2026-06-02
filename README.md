@@ -2,12 +2,12 @@
 Projektarbete i kurserna:
 * Frontend Ramverk/Bibliotek (React, Angular)
 * JavaScript Avancerat
-### Innehållsförteckning
+## Innehållsförteckning
 - Projektbeskrivning
 - Installera och starta projektet
 - Beskrivning av implementationen
   
-### <a id="proj"></a>Projektbeskrivning
+## <a id="proj"></a>Projektbeskrivning
 En React-applikation skapas från grunden med externa API-anrop och grundläggande funktionalitet för e-handel.
 
 Målet med projektet är att skapa en enkel men funktionell webshop där användare kan:
@@ -45,14 +45,14 @@ Projektet kommer att bedömas utifrån följande kriterier:
 * Innovation: Kreativa lösningar och tillägg som förbättrar den grundläggande funktionaliteten belönas.
 
 ### Inlämning
-*Ditt färdiga projekt ska laddas upp till ett offentligt Git-repositorium (GitHub). Länken lämnas in i Learnpoint.
+* Ditt färdiga projekt ska laddas upp till ett offentligt Git-repositorium (GitHub). Länken lämnas in i Learnpoint.
 * Inkludera en välskriven README-fil i git-repo. Den ska innehålla tydliga instruktioner för att installera och starta projektet (ex npm install), samt att redovisa koden till examinatorn.
 * Beskrivning i korthet i README av implementationen av debounce-funktionen och felhanteringen med try...catch.
 
 ### Projektredovising
 Projektredovisning Demo av webbplats och kod 2026-06-09
 
-### Installera och starta projektet
+## Installera och starta projektet
 1) Github repo:<br>
 git clone https://github.com/Yvonne-yo/react-webshop-2026.git
 2) Öppna VScode
@@ -67,7 +67,75 @@ http://localhost:5173/
 
 Nu hälsas du välkommen till YoYo webshop!
 
-### Beskrivning av implementationen
+## Beskrivning av implementationen
+### Projektimplementation:<br>
+Byggverktyg: Vite<br>
+Språk: Javascript<br>
+Bibliotek: React<br>
+CSS: Hybrid med index.css & Tailwindcss v4<br>
+Font: @fontsource-variable/open-sans<br>
+Ikoner: lucide-react<br>
+SPA routing: react-router-dom<br>
+
+### React Projektstruktur: react-webshop-2026
+README.md<br>
+index.html<br>
+
+./src:<br>
+App.jsx<br>
+main.jsx<br>
+index.css<br>
+
+./src/api:<br>
+productsApi.js<br>
+
+./src/assets:<br>
+YoYo_butterfly_only_200x199.jpg<br>
+
+./src/components:<br>
+BoutiqueError.jsx<br>
+BoutiqueLoader.jsx<br>
+BrandTagLine.jsx<br>
+CartProvider.jsx<br>
+HeroSection.jsx<br>
+PopularProducts.jsx<br>
+ProductCard.jsx<br>
+ProductDetailCard.jsx<br>
+QuantityController.jsx<br>
+ReturnToHomeLink.jsx<br>
+ThemeProvider.jsx<br>
+
+./src/config:<br>
+shopConfig.js<br>
+
+./src/context:<br>
+CartContext.js<br>
+ThemeContext.js<br>
+
+./src/hooks:<br>
+useCart.js<br>
+useDebounce.js<br>
+useFeaturedProducts.js<br>
+useProducts.js<br>
+useSearch.js<br>
+useTheme.js<br>
+
+./src/layout:<br>
+Footer.jsx<br>
+MainContent.jsx<br>
+MainLayout.jsx<br>
+NavBar.jsx<br>
+
+./src/views:<br>
+AboutView.jsx<br>
+CartView.jsx<br>
+CategoryView.jsx<br>
+CheckoutView.jsx<br>
+ContactView.jsx<br>
+HomeView.jsx<br>
+ProductDetailView.jsx<br>
+SearchView.jsx<br>
+
 
 
 ### SLUT
