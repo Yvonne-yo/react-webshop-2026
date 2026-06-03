@@ -5,7 +5,11 @@ Projektarbete i kurserna:
 ## Innehållsförteckning
 - Projektbeskrivning
 - Installera och starta projektet
-- Beskrivning av implementationen
+- Om implementationen
+  - Projektimplementation
+  - React Projektstruktur: react-webshop-2026
+  - Global State Management (GSM)
+  - Debounce och try...catch
   
 ## <a id="proj"></a>Projektbeskrivning
 En React-applikation skapas från grunden med externa API-anrop och grundläggande funktionalitet för e-handel.
@@ -55,9 +59,10 @@ Projektredovisning Demo av webbplats och kod 2026-06-09
 ## Installera och starta projektet
 1) Github repo:<br>
 git clone https://github.com/Yvonne-yo/react-webshop-2026.git
+
 2) Öppna VScode
 * Öppna folder react-webshop-2026
-* Öppna terminalen (Git Bash)
+3) Öppna terminalen (Git Bash)
 * Installera genom att köra kommando:<br>
 npm install
 * Starta genom att köra kommando:<br>
@@ -67,7 +72,7 @@ http://localhost:5173/
 
 Nu hälsas du välkommen till YoYo webshop!
 
-## Beskrivning av implementationen
+## Om implementationen
 ### Projektimplementation:<br>
 Byggverktyg: Vite<br>
 Språk: Javascript<br>
@@ -136,7 +141,47 @@ HomeView.jsx<br>
 ProductDetailView.jsx<br>
 SearchView.jsx<br>
 
+### Global State Management (GSM)
+Shopping cart:<br>
+./src/context/CartContext.js<br>
+./src/components/CartProvider.jsx<br>
+./src/hooks/useCart.js<br>
 
+Light/Dark mode:<br>
+./src/context/ThemeContext.js<br>
+./src/components/ThemeProvider.jsx<br>
+./src/hooks/useTheme.js<br>
+
+### Debounce och try...catch
+#### Debounce
+* .src/hooks/useDebounce.js
+
+#### DummyJSON API
+* ./src/api/productsApi.js<br> 
+Alla anrop till DummyJSON API hanteras i denna fil och använder async/await och try...catch.
+
+#### Try...Catch
+* .src/hooks/useFeaturedProducts.js<br>
+import { getProductsByCategory } from "../api/productsApi";
+
+Här finns en useEffect som använder async/await och  try...catch...finally för att hämta de 4 utvalda produkterna som visas på förstasidan i YoYo webshop
+Memory leak protection finns.
+
+* .src/hooks/useProducts.js<br>
+import { getAllProducts, getProductsByCategory } from "../api/productsApi";
+
+Här finns en useEffect som använder async/await och try...catch...finally för att hämta alla produkter inom en viss kategori för att visa i YoYo webshop när kunden väljer en viss kategori från menyn.
+Memory leak protection finns.
+
+#### Try...Catch och Debounce
+* .src/hooks/useSearch.js<br>
+import { searchProducts } from "../api/productsApi";<br>
+import { useDebounce } from "./useDebounce";<br>
+
+Här finns en useEffect som använder async/await och try...catch...finally för att hämta sökresultatet från dummyJSON. En kontroll görs för att säkerställa att endast produkter inom giltiga katergorier visas som sökresultat.
+
+Debounce används för sökfältet. Här sätter jag debounce delay till 4 sekunder så det blir tydligt vid demo.
+Memory leak protection finns.
 
 ### SLUT
 
