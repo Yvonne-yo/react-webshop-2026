@@ -16,6 +16,7 @@ import SearchView from "./views/SearchView";
 /* ----- COMPONENT: App (Root Orchestrator) ----- */
 //  Sets up the high-level infrastructure, including global themes and global cart.
 //  Coordinates the primary client-side declarative router layout paths tree.
+//  SPA using BrowserRouter, Routes and Route from react-router-dom
 
 export default function App() {
 

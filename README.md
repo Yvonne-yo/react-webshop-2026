@@ -164,7 +164,7 @@ Alla anrop till DummyJSON API hanteras i denna fil och använder async/await och
 * .src/hooks/useFeaturedProducts.js<br>
 import { getProductsByCategory } from "../api/productsApi";
 
-Här finns en useEffect som använder async/await och  try...catch...finally för att hämta de 4 utvalda produkterna som visas på förstasidan i YoYo webshop
+Här finns en useEffect som använder async/await och  try...catch...finally för att hämta de 4 utvalda produkterna som visas på förstasidan i YoYo webshop.
 Memory leak protection finns.
 
 * .src/hooks/useProducts.js<br>

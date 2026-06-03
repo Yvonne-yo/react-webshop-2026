@@ -6,6 +6,13 @@ import QuantityController from "./QuantityController";
 /* ----- COMPONENT: ProductDetailCard ----- */
 // Renders an expanded, detailed presentation interface for a singular product instance.
 // Mirrors the established look-and-feel of the atomic ProductCard components.
+//
+// ARCHITECTURAL NOTE (Isolated Interface Layout):
+// Unlike the atomic ProductCard, this component is fully independent and does not reside 
+// inside a parent page routing Link. Because there is no outer anchor tag, the risk of 
+// accidental page navigation during quantity clicks is entirely eliminated. 
+// Therefore, no defensive event shielding (preventDefault or stopPropagation) is required 
+// within these action handles, keeping the interaction logic remarkably light and clean.
 
 export default function ProductDetailCard({ product }) {
     // Extract global cart state and mutation methods from the hook
@@ -113,7 +120,7 @@ export default function ProductDetailCard({ product }) {
             
                             ) : (
                                 /* STATE 2: TRANSFORMED STEP QUANTITY CONTROLLER PANEL */
-                                    // Injects the click capturing handlers directly into the structural hooks
+                                // Passes down the synchronized interaction handlers as props to the controller panel
                                     <QuantityController
                                         quantity={existingCartItem.quantity}
                                         onIncrement={handleIncrement}

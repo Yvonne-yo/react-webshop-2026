@@ -37,23 +37,21 @@ function LogoLink({ onClick }) {
             </span>
         </Link>
     );
-};
+}
 
 /* ----- SUBCOMPONENT : DropdownMenu (Organism) ----- */
-// Render the responsive dropdown wrapper and its links tree hierarchy
+// Renders the responsive dropdown menu containing navigation links.
 function DropdownMenu({ isOpen, onClose }) {
-    // If the menu is closed, render absolutly nothing
+    // If the menu is closed, render absolutely nothing
     if (!isOpen) return null;
 
-    return(
-        /* 
-          MOBILE FIRST DESIGN:
-          - Default (Mobile): Full width, stretches across the screen, left-aligned layout.
-          - Desktop (lg:): Switches to an absolute floating box. Placed at the right corner, 
-            locked to a professional 320px width (w-80), with an elegant shadow and rounded edges!
-        */
-
-        <nav className="w-full bg-brand-dark border-t border-white/10 px-4 py-6 flex flex-col gap-4 animate-fade-in
+    return (
+        /* RESPONSIVE LAYOUT BEHAVIOR (Mobile First):   */
+        //  - On mobile screens, the menu stretches completely across the width of the screen.
+        //  - On desktop screens (lg:), it transforms into a clean, standalone dropdown box (320px wide) 
+        //    placed in the top right corner, complete with rounded corners and a shadow effect.
+        
+        <nav className="w-full bg-brand-dark border-t border-white/10 px-4 py-6 flex flex-col gap-4 transition-opacity duration-300 ease-out
                         lg:absolute lg:right-4 lg:top-full lg:w-80 lg:rounded-2xl lg:shadow-2xl lg:border lg:border-white/10 lg:mt-2 ">
 
             {/* A clean, structured block for all webshop routing links */}
@@ -114,7 +112,7 @@ function DropdownMenu({ isOpen, onClose }) {
             </div>            
         </nav>
     );
-};
+}
 
 
 /* ----- MAIN COMPONENT : NavBar (Orchestrator) ----- */
@@ -129,7 +127,7 @@ export function NavBar(){
     };
     
     
-    return(
+    return (
         <>
             <header className="sticky top-0 z-40 bg-brand border-b border-black/10 shadow-md 
                                 transition-colors duration-300">
@@ -139,10 +137,10 @@ export function NavBar(){
                     <LogoLink onClick={closeMenu} />
 
 
-                    {/* Utility Controls (Cart, Theme toggle, Hamburger) */}
+                    {/* Utility Controls (Search, Cart, Theme toggle, Hamburger) */}
                     <div className="flex items-center gap-2 sm:gap-4">
 
-                        {/* Desktop and Mobile Global Search Trigger Link Anchor */}
+                        {/* Search Link */}
                         <Link 
                             to="/search"
                             onClick={closeMenu}
@@ -163,11 +161,11 @@ export function NavBar(){
                             <ShoppingCart className="w-5 h-5 group-hover:scale-105 transition-transform" />
                         
                             {/* DYNAMIC CART BADGE COUNTER */}
-                            {/* Renders only when the basket contains one or more verified products */}
+                            {/* Renders only when there are items in the cart. */}
                             {totalItemsCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white font-black text-[10px] 
                                                  w-4 h-4 rounded-full flex items-center justify-center shadow-sm 
-                                                 animate-fade-in whitespace-nowrap min-w-4 px-0.5 border border-brand">
+                                                 transition-opacity duration-300 ease-out whitespace-nowrap min-w-4 px-0.5 border border-brand">
                                     {totalItemsCount}
                                 </span>
                             )}                        
@@ -194,7 +192,7 @@ export function NavBar(){
                         </button>
 
 
-                        {/* Global menu trigger button, always visible */}
+                        {/* Hamburger menu button */}
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="p-2 rounded-lg bg-white/10 border border-white/20 text-white
@@ -214,7 +212,7 @@ export function NavBar(){
                 
                 </div>
 
-                {/* Clean dropdown menu orchestrator */}
+                {/* Dropdown menu component */}
                 <DropdownMenu 
                     isOpen={isMenuOpen}
                     onClose={closeMenu}
@@ -223,5 +221,5 @@ export function NavBar(){
             </header>
         </>
     );
-};
+}
 

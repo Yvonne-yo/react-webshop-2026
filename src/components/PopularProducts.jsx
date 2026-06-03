@@ -6,9 +6,10 @@ import BoutiqueError from "./BoutiqueError";
 
 
 /* ----- COMPONENT PopularProducts ----- */
+/* Used by the HomeView               	 */
 // Render "This Week's Most Popular Products" to the storefront HomeView
 // Showcases our curated, whitelisted collection of boutique favorites 
-// driven entirely by the asynchronous useFeaturedProducts lifecycle hook.
+// driven entirely by the asynchronous useFeaturedProducts hook.
 
 export default function PopularProducts() {
 	const { products, loading, error } = useFeaturedProducts();

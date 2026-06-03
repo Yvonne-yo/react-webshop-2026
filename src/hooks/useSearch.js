@@ -4,26 +4,24 @@ import { ALLOWED_CATEGORIES } from "../config/shopConfig"
 import { useDebounce } from "./useDebounce";
 
 /* ----- CUSTOM HOOK useSearch ----- */
-// Manages search results, loading states, and explicit error mitigation.
-// Purely executes network requests when a valid debounced query string is present.
-// Search results will be cross-matched against ALLOWED_CATEGORIES to make sure
-// that products displayed are part of the webshop product range. (whitelist filtering)
-// debounce is used.
-// async/await and try/catch/finally is used.
+// Manages live product search queries, loading states, and error handling.
+// Uses a custom debounce timer to delay network requests until typing pauses.
+// All incoming API products are filtered against ALLOWED_CATEGORIES to ensure 
+// that only items within the active boutique catalog are displayed (whitelist filtering).
 
 export function useSearch(searchQuery = "") {
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // useDebounce custom hook
-    // debouncedQuery will stay frozen and empty until the user takes a 4000 ms = 4 seconds(default value 300ms) pause from typing.
-    // Here the delay is set to 4 seconds so the debounce will be clear to the user during the demo.
+    // DEBOUNCE TIMER CONFIGURATION
+    // The debouncedQuery stays empty until the user takes a 4000 ms (4 seconds) pause from typing.
+    // This extended delay is intentionally set to clearly demonstrate the debounce effect during the demo.
     const debouncedQuery = useDebounce(searchQuery, 4000);
 
     useEffect(() => {
         
-        // If the query is empty or contains spaces, we immediately stop here.
+        // If the query is empty or contains spaces, stop the execution immediately
         if (!debouncedQuery || debouncedQuery.trim() === "") {
             return;
         }
@@ -32,8 +30,7 @@ export function useSearch(searchQuery = "") {
 
         async function executeSearch () {
             // FIXED FOR CASCADING RENDERS: 
-            // Keeping setLoading and setError safely inside the async wrapper completely erases 
-            // any unsafe synchronous render cascading errors.
+            // Keeping setLoading and setError inside the async wrapper erases synchronous render cascading.
             setLoading(true);
             setError(null);
 
@@ -65,31 +62,26 @@ export function useSearch(searchQuery = "") {
         executeSearch();
 
         // Memory leak cleanup protection mechanism
-        // 
-        // Why it's used: If a user types very fast and leaves/closes this panel before
-        // the asynchronous fetch arrives from the server, React will try to run
-        // setSearchResults on a component that is no longer on the screen.
-        // That causes memory leaks. By setting isMounted to false during unmount,
-        // we safely cancel any trailing state updates in mid-air!
+        // If a user navigates away or closes the search panel before the 
+        // asynchronous fetch arrives, React would attempt to update state on an unmounted 
+        // component. Setting isMounted to false safely cancels any trailing state updates.
         return () => {
             isMounted = false;
         };
 
-        // EFFECT DEPENDENCIES
-        // - debouncedQuery: Fires the search whenever the user types a new word.
+        
+        // useEffect dependencies
+        // - debouncedQuery: Fires the search whenever the debounced string updates.
     }, [debouncedQuery]); 
 
 
     // SMART TIMER LOADER (Loading Screen Synchronization)
     //
     // How it works:
-    // As soon as you press a key (e.g. type "l"), the 'searchQuery' changes immediately.
-    // But the 'debouncedQuery' is still there and completely empty for another 4 seconds!
-    //
-    // JavaScript compares these two: Is "l" different from ""? Yes! That means the timer is counting down
-    // right now. Then we force 'finalLoadingState' to be TRUE immediately.
-    // This makes the loader spinner start on the screen the same microsecond the user presses
-    // on the keyboard, instead of waiting 4 seconds for the API fetch to start!
+    // The moment a user presses a key, 'searchQuery' updates instantly, while 'debouncedQuery' 
+    // remains unchanged during the 4-second delay. Since these two values differ, the interface 
+    // identifies that the timer is counting down and forces 'finalLoadingState' to be true.
+    // This triggers the loading spinner immediately on screen instead of waiting for the fetch to start.
     const isWaitingForTimer = searchQuery.trim() !== debouncedQuery.trim();
     const finalLoadingState = loading || isWaitingForTimer;
 
@@ -103,7 +95,7 @@ export function useSearch(searchQuery = "") {
             ? []
             : searchResults;
         
-
+    
     // Return finalLoadingState which combines the actual database state and the smart timer guard!
     return { searchResults: finalResults, loading: finalLoadingState, error };
 }

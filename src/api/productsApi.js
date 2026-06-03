@@ -1,3 +1,4 @@
+/* -----  productsAPI.js ----- */
 // Fetch product information from DummyJSON API service at "https:/dummyjson.com/products"
 // async/await och try/catch is used.
 
@@ -5,7 +6,7 @@
 // 1. console.error logs the raw, technical system message directly into the browser's developer console.
 //    This is for developers to troubleshoot exactly what went wrong under the hood.
 // 2. throw new Error translates the failure into a clean, reassuring, and human-readable message.
-//    This is sent upward to the UI so the customer sees a friendly error-banner instead of scary system crash code.
+//    This is sent upward to the UI so the customer sees a friendly error-banner instead of just a system crash code.
 
 /* ----- Function 1: Fetches a general block of products ----- */
 export async function getAllProducts(limit = 12, skip = 0) {

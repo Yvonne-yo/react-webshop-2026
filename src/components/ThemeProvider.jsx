@@ -1,39 +1,44 @@
 import { useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
-/* ----- PROVIDER COMPONENT: ThemeProvider ----- */
-// Provider of light/dark mode feature.
+/* ----- GSM PROVIDER COMPONENT: ThemeProvider ----- */
+// Provider of the light and dark mode application features.
+//
+// ARCHITECTURAL THEME PRIORITY HIERARCHY:
+// To ensure the ultimate user experience, the theme initialization follows a strict hierarchy:
+// 1. First priority: It checks localStorage for an explicit, user-selected theme preference.
+// 2. Second priority (Fallback): If no saved preference exists, it executes a backup check 
+//    reading the operating system value (OS preference) via matchMedia to automatically align the shop.
+
 export default function ThemeProvider({ children }) {
-  // Initiate state by using an arrow function that will only execute once, when the component is mounted.
-  // Theme will always be intiated by valid values "dark" or "light" , from localStorage or OS.
-  // First check: localStorage. If the user has made a selection previously, a value to be used is stored here.
-  // A validation is made to make sure that only a valid value is returned. Avoiding manipulated values.
-  // Second check: let the browser ask the OS if the user has set the system to dark mode. The second check
-  // will return dark or light.
+  // THEME INITIALIZATION LAYER
+  // Executes an arrow function once upon mounting to secure a valid startup value.
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("YoYo_webshop_theme");
     const validThemes = ["light", "dark"];
 
-    // Defensive validation to ensure only a valid value is returned, avoiding corrupted data.
+    // Defensive validation: Only accept hardcoded valid design strings. 
+    // Bypasses and heals the state array if external local storage values are corrupted.
     if (savedTheme && validThemes.includes(savedTheme)) {
       return savedTheme;
     }
 
+    // Operating System Fallback Check
     const systemPrefersDark = window.matchMedia(
       "(prefers-color-scheme: dark)",
     ).matches;
     return systemPrefersDark ? "dark" : "light";
   });
 
-  // useEffect executes every time the state "theme" changes.
-  // Set the new value to the <html> element and save the new value to localStorage
+  // PERSISTENT STORAGE & DOM SYNCHRONIZATION
+  // Fires automatically every time the theme state changes to update the viewport canvas.
   useEffect(() => {
-    const root = window.document.documentElement;     // root is assigned to the <html> element
+    const root = window.document.documentElement;     // Assigns root directly to the <html> element
 
     if (theme === "dark"){
       root.classList.add("dark");
       root.classList.remove("light");
-      root.setAttribute("data-theme", "dark");        // sometimes needed for external libraries
+      root.setAttribute("data-theme", "dark");        // Synchronizes with index.css selectors to activate dark mode colors
     } else {
       root.classList.add("light");
       root.classList.remove("dark");
@@ -45,7 +50,9 @@ export default function ThemeProvider({ children }) {
   }, [theme]);    // useEffect dependency set to "theme"
 
  
-  // function that toggles the "theme", will be used by a button in webshop navbar
+  // INTERACTIVE THEME TOGGLE METHOD
+  // Toggles the theme between dark and light mode. 
+  // Invoked by the sun/moon button inside the webshop navbar.
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };

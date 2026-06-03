@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 
-/* ----- PROVIDER COMPONENT: CartProvider ----- */
-// Provider of shopping cart feature.
+/* ----- GSM PROVIDER COMPONENT: CartProvider ----- */
+// Provider of the shopping cart feature.
 // Orchestrates the global shopping cart state architecture.
 // Integrates persistent localStorage synchronization and defensive state validation.
 export default function CartProvider({ children }) {
     // Initiate state by using an arrow function that will only execute once, when the component is mounted.
-    // The cart items will always be initiated by a valid array schema extracted from localStorage.
+    // The cart items will always be initiated by a valid array extracted from localStorage.
     // If the data is corrupted or empty (no cart items saved), cart items will be initiated by a clean empty array. 
     const [cartItems, setCartItems] = useState(() => {                                              
         const savedCart = localStorage.getItem("YoYo_webshop_cart");
 
-        // Use a try-catch to handle failures during JSON.parse()
+        // Using a try-catch to handle failures during JSON.parse()
         try {
             // DEFENSIVE LOCALSTORAGE DESERIALIZATION & VALIDATION
             // Checks if persistent cart data exists on the hard drive (string format). If found, 
@@ -25,7 +25,7 @@ export default function CartProvider({ children }) {
             // by the backend server.
             if (savedCart) {
                 const parsedCart = JSON.parse(savedCart);
-                // Defensive validation to ensure only a valid array matrix is returned, avoiding corrupted data.
+                // Defensive validation to ensure only a valid array is returned, avoiding corrupted data.
                 if (Array.isArray(parsedCart)) {
                     return parsedCart;              // return of valid cart information from YoYo_webshop_cart
                 }
@@ -34,7 +34,7 @@ export default function CartProvider({ children }) {
         } catch {
             // Fallback to a clean state if the localStorage string is corrupted.
             // Example of one scenario: YoYo_webshop_cart exists in localStorage but contains an empty string "" (corrupted by somebody)
-            // In the try code block if (savedCart) will be true, but execution of 
+            // In the try code block if(savedCart) will be true, but execution of 
             // JSON.parse("") will crash and throw an error that will make the catch code block execute and save the webshop from craching.
             return [];
         }
@@ -54,22 +54,36 @@ export default function CartProvider({ children }) {
         localStorage.setItem("YoYo_webshop_cart", JSON.stringify(cartItems));
     }, [cartItems]);
 
-
     // =========================================================================
-    // GLOBAL CART ACTIONS (Definitions of shopping cart methods.)
+    // GLOBAL CART ACTIONS & IMMUTABLE STATE MANAGEMENT
     // 
-    // These internal context methods define the actions available to alter
-    // the global 'cartItems' state array from consumer components.
-    // Terminologically defined as methods rather than functions as they are 
-    // explicitly bound to, and operate inside, the CartProvider component.
+    // These internal context methods define the actions available to alter the
+    // global 'cartItems' state array from consumer components. Terminologically 
+    // defined as methods rather than functions as they are explicitly bound to, 
+    // and operate inside, the CartProvider component.
+    //
+    // HOW IMMUTABLE STATE MANAGEMENT IS HANDLED (Methods 1-4):
+    // In React, mutating state directly (like using push(), splice(), or changing 
+    // properties on the spot) is not allowed because it stops components from re-rendering.
+    // To solve this, a fresh copy of the array or object is always created:
+    //
+    // - METHOD 1 (Add): Uses the spread operator (...) to create a brand new array 
+    //   instead of running a forbidden push().
+    // - METHOD 2 (Update): Uses .map() to get a new array instance, combined with 
+    //   object spreading ({ ...item }) to safely copy and update the quantity parameter.
+    // - METHOD 3 (Remove): Uses the pure .filter() method to build a fresh array 
+    //   that excludes the chosen product, completely avoiding mutative operations like splice().
+    // - METHOD 4 (Clear): Simply sets a new empty array ([]), which changes 
+    //   the memory reference without resetting array lengths directly.
     // =========================================================================
+
 
     // METHOD 1: ADD ITEM TO CART
     // Adds a product instance. If the entity already exists inside the cart, 
     // it targets the specific item and increments its quantity parameter.
     const addToCart = (product, quantity = 1) => {
         setCartItems((prevCartItems) => {
-            // Find out if the product already in the shopping cart. 
+            // Find out if the product already exists in the shopping cart. 
             const existingCartItem = prevCartItems.find((item) => item.id === product.id);
         
             // If the product already exist in the cart:
@@ -82,6 +96,7 @@ export default function CartProvider({ children }) {
                         : item
                 );
             }
+
         // If the product is NOT already in the shopping cart, it will be added to the cart
         // Create a new array with prevCartItems objects (using spreading operator) 
         // Adding the new product object as the last item in the array.
@@ -132,24 +147,26 @@ export default function CartProvider({ children }) {
         setCartItems([]);
     };
  
-    // =========================================================================
-
     
     // =========================================================================
     // DYNAMIC DERIVED STATE BALANCES (Calculate sums on the fly.)
     // 
-    // Why it's used: Instead of saving totals in a separate state with a useEffect,
-    // these metrics are calculated live in real-time directly from 'cartItems'.
-    // This guarantees that the total price and item count are always perfectly 
-    // synchronized with the cart, eliminating any risks of extra re-renders or 
-    // infinite layout loops.
+    // How it works: Instead of storing the total price and item count in a separate 
+    // useState and syncing them with a useEffect, these are calculated live directly 
+    // from 'cartItems' using .reduce(). 
+    //
+    // Why this is better: It ensures that the totals are always completely in sync 
+    // with whatever is currently in the cart. This eliminates the risk of asynchronous 
+    // state lags, unexpected extra re-renders, or accidental infinite loops. Since 
+    // these calculate primitive numbers, React easily tracks if the values actually 
+    // changed between renders.
     // =========================================================================
     const totalItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalCartPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
 
 
-    return(
+    return (
         <CartContext.Provider
             value={{
                 cartItems,

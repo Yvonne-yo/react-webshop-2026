@@ -1,5 +1,5 @@
-
 /* ----- COMPONENT: BrandTagLine ----- */
+/* Used by the HomeView                */
 
 export default function BrandTagLine(){
     return(

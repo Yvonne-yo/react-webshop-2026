@@ -4,7 +4,7 @@ import { ALLOWED_CATEGORIES } from "../config/shopConfig";
 
 /* ----- CUSTOM HOOK useFeaturedProducts ----- */
 // Fires parallel asynchronous API network requests to resolve a handpicked 
-// list of visual top seller products simultaneously using Promise.all
+// list of visual top seller products simultaneously using Promise.all()
 
 // see hook useProducts, for explanations about 
 // Memory leak protection: isMounted
@@ -25,9 +25,9 @@ export function useFeaturedProducts() {
             // try-catch-finally
             try {
                 // HIGH PERFORMANCE PARALLEL CATEGORY FETCH (Promise.all):
-                // We take your 4 first allowed categories (beauty, fragrances, skin-care, sunglasses).
-                // For each category, we ask the server to give us only 1 product (limit=1).
-                // Promise.all fires off all 4 targeted network fetches at the exact same millisecond!
+                // Extracts the first four allowed categories from the configuration.
+                // For each category, the server is requested to return exactly one product (limit=1).
+                // Promise.all executes all network requests simultaneously at the exact same millisecond.
                 const targetCategories = ALLOWED_CATEGORIES.slice(0, 4);
 
                 const fetchPromises = targetCategories.map((category) => 
@@ -37,14 +37,14 @@ export function useFeaturedProducts() {
                 const responses = await Promise.all(fetchPromises);
 
                 // ----- DATA TRANSFORMATION PIPELINE -----
-                // Promise.all returns an array of complete API response objects containing metadata (like total, skip, limit).
-                // We need to unpack this data and transform it into a clean, flat array of 4 individual product entities:
+                // Promise.all returns an array of response objects with server metadata (total, skip, limit).
+                // This logic extracts the actual products and turns them into a flat array:
                 //
-                // 1. responses.map(...) iterates through our 4 category answers.
-                // 2. Since we used a strict 'limit=1' in the fetch, each category array contains exactly ONE product at index [0].
-                //    We extract this single product object and discard the surrounding server metadata.
-                // 3. .filter(Boolean) acts as a defensive safety net. If a category temporarily fails or returns empty, 
-                //    it cleanly sweeps away the undefined/null item instead of crashing our React grid rendering loop.
+                // 1. responses.map(...) loops through the category answers from the server.
+                // 2. Since the fetch uses 'limit=1', the code extracts the single product object found at index [0] 
+                //    and drops the surrounding server metadata.
+                // 3. .filter(Boolean) works as a safety net. If a category is empty or fails, it cleans away 
+                //    the empty item so the grid can render safely without breaking the application.
                 const mixedItems = responses.map((response) => response.products[0]).filter(Boolean);
 
                 // Only commit updates to state if the component lifecycle is still currently mounted

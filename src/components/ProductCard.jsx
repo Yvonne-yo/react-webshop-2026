@@ -5,6 +5,12 @@ import QuantityController from "./QuantityController";
 /* ----- COMPONENT ProductCard ----- */
 // A reusable presentation component that renders a product card.
 // Shared across both main storefront grids and dynamic category collection feeds.
+// 
+// ARCHITECTURAL NOTE (Redundant Defensive Design):
+// This component implements a double defensive click-protection framework (event shielding).
+// It runs event propagation prevention both within individual button click handlers and 
+// on the wrapping layout container. This strictly blocks event bubbling to the parent Link, 
+// ensuring that clicking numbers, margins, or triggers does not cause accidental page navigation.
 
 export function ProductCard({ product }) {
   // Extract global cart state and mutation methods from the hook
@@ -94,7 +100,7 @@ export function ProductCard({ product }) {
 				{/* BUTTON FIELD: Intercepted Cart Trigger */}
 				{/* BUTTONS using the event handlers to change the cart */}
         {/* If the product does NOT exist in the cart, show the "Add to cart"-button */}
-        {/* If the product already does exist in the cart, show the QuantityController-button. */}
+        {/* If the product already exists in the cart, show the QuantityController-button. */}
         {/* QuantityController-button consists of Plus and Minus buttons and displays the current quantity for the product. */}
         
         {/* DEFENSIVE EVENT PROPAGATION SHIELD (Click protection) */}
@@ -120,7 +126,8 @@ export function ProductCard({ product }) {
             ) : (
 
               /* STATE 2: REUSABLE MOUNTED STEP QUANTITY CONTROLLER ATOM */
-              // Injects the click capturing handlers directly into the structural hooks
+              // Passes the click-protected handlers down as props to the controller panel
+              // to safely synchronize the global cart updates without causing event bubbling.
               <QuantityController
                 quantity={existingCartItem.quantity}
                 onIncrement={handleIncrementClick}

@@ -1,46 +1,46 @@
 import { useState, useEffect } from "react";
 import { getAllProducts, getProductsByCategory } from "../api/productsApi";
 
-/* ----- CUSTOM HOOK useProducts ----- */
-// Manages fetch states, loading spinners and error mitigation
-// Fetch for both all products and products by category
+/* ----- CUSTOM HOOK: useProducts ----- */
+// Manages data fetching states, loading indicators, and error tracking.
+// Handles requests for both the complete product catalog and category-specific views.
 //
 // ----- useEffect dependency array: [categoryName, limit, skip] -----
-// Exampel: If the user changes the category of products in the dropdown menu, these variables will
-// change and trigger the useEffect immediately and automatically fetch products in the new category. 
-// categoryName of the products to be fetched
-// limit: The maximum number of products to be fetched per page (default is 12 to fill a 4-column layout layout grid).
-// skip:  The offset count telling the server how many items to skip (calculated dynamically to change pages during pagination).
+// Example: If a user selects a new category from the navigation dropdown menu, 
+// these variables change and trigger the useEffect automatically to fetch products 
+// from the newly selected category.
+// - categoryName: The identifier of the active product collection to be fetched.
+// - limit: The maximum number of items per page (default is 12 to fill a 4-column layout grid).
+// - skip: The offset count used by the server (calculated dynamically to change pages during pagination).
 //
-// ---- Memory leak protection: isMounted ----- 
-// isMounted is a boolean control flag to prevent memory leakaged
-// Example: If the customer clicks on a link to an other page before DummyJSON has answered,
-// the cleanup function will set isMounted to false. This prevents React from trying to update  
-// a component that no longer is visible, which stops the memory leakage. 
-// A possible race condition will not happen.
+// ----- Memory leak protection: isMounted ----- 
+// The 'isMounted' boolean flag prevents state updates on unmounted components.
+// Example: If a customer clicks a link to another page before DummyJSON has responded, 
+// the cleanup function sets isMounted to false. This stops React from attempting to update 
+// a component that is no longer visible, preventing memory leaks and avoiding potential race conditions.
 //
-// ----- finally (try-catch-finally) will set setLoading to false. -----
-// Guarantees that the loading spinner always is turned off at the end, regardless of success or at network failures.
-//
+// ----- finally (try-catch-finally) -----
+// The finally block guarantees that the loading state is turned off at the end of the operation, 
+// regardless of a successful response or a network failure.
 /* ----------------------------------- */
 
-/* ----- THE REACT REACTIVE ASYNCHRONOUS LIFECYCLE (How useProducts renders in waves) ----- */
-// React executes synchronously and NEVER waits for an asynchronous API fetch to complete prior to rendering.
-// Therefore, this custom hook operates and returns data in two distinct waves (re-renders):
+/* ----- THE REACT ASYNCHRONOUS LIFECYCLE (How useProducts renders in waves) ----- */
+// React runs synchronously and does not wait for asynchronous API network requests to complete 
+// prior to rendering. Therefore, this custom hook returns data in two distinct phases (re-renders):
 //
 // Wave 1: Initial Render (Millisecond 0)
 // The hook executes instantly using the initial useState values. It immediately returns an object containing 
 // an empty products array (products: []) and a loading flag set to true (loading: true). This synchronous return 
-// allows the UI interface (like PopularProducts) to instantly render a beautiful loading spinner on the screen.
-// Only AFTER this first render is committed to the DOM screen, the useEffect hook triggers in the background.
+// allows the user interface (like PopularProducts) to instantly render a beautiful loading spinner on the screen.
+// Only AFTER this first render is displayed, the useEffect hook triggers in the background.
 //
-// Wave 2: The Asynchronous API Resolution (Approx. Millisecond 300)
-// The async/await background pipeline resolves once DummyJSON responds. The data lands, and we invoke 
-// setProductsData(response) followed by the finally block setting setLoading(false). Because React state triggers 
-// a mandatory re-render whenever state setters are executed, React halts and forces this whole Custom Hook 
-// to execute a second time. During this second pass, the hook returns a brand new object containing the 
-// sharp product data array and loading as false, which automatically hides the spinner and draws the catalogue of products..
+// Wave 2: Asynchronous API Resolution (Approx. Millisecond 300)
+// The asynchronous request resolves once the DummyJSON server responds. The state setters are invoked, 
+// updating the products data and setting loading to false. Because changing state triggers a mandatory 
+// re-render, React executes this entire custom hook a second time. During this second pass, the hook returns 
+// the actual product data array and sets loading to false, hiding the spinner and rendering the catalog.
 /* ----------------------------------- */
+
 
 export function useProducts(categoryName = null, limit = 12, skip = 0) {
     // UseState hooks for data, loading animation and error tracking  
@@ -91,7 +91,7 @@ export function useProducts(categoryName = null, limit = 12, skip = 0) {
         // Cleanup function: Fires automatically if the user clicks away or changes pages in the middle of a fetch
         return () => {
             isMounted = false;
-        }
+        };
     
         
     }, [categoryName, limit, skip]); // useEffect dependency:  useEffect automatically reruns if category, limit parameters or pagination skips change!

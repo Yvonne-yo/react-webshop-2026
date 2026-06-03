@@ -13,7 +13,7 @@ export default function BoutiqueLoader({message = "Loading premium boutique deta
             <Loader2 className="w-10 h-10 animate-spin mb-5" />
       
             {/* 
-            FIXED FOR DYNAMIC TEXT LENGTHS:
+            Styling for dynamic text lengths:
             - text-center: For balance if the string wraps into multiple rows.
             - max-w-md: Limits long strings (like custom search logs) to break lines gracefully.
             - leading-relaxed: Adds breathing space in line height for readability in WCAG text!

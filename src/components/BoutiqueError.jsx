@@ -21,7 +21,7 @@ export default function BoutiqueError({
                 </p>
             </div>
 
-            {/* Safe navigational anchor routing back to main hub */}
+            {/* Safe navigational anchor routing back to main HomeView */}
             <div className="flex justify-center">
                 <ReturnToHomeLink />
             </div>

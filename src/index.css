@@ -1,11 +1,13 @@
 /* index.css for YoYo Webshop */
+/* CSS: Hybrid with index.css and Tailwindcss v4 */
 @import "tailwindcss";
 
 /* ----- TAILWIND & DARK MODE SETUP ----- */
-@custom-variant dark (&:where(.dark, .dark *));     /* To make sure that dark mode works with all tailwind 4 versions. */
+/* To make sure that dark mode works with all tailwindcss v4 versions. */
+@custom-variant dark (&:where(.dark, .dark *));     
 
 /* Tailwind configuration */
-/* Theme variables instruct Tailwind to create new utility classes that I can use in my project. */
+/* Theme variables instruct Tailwind to create new utility classes that can be used in the project. */
 @theme {
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
@@ -39,7 +41,7 @@
 /* ----- GLOBAL SETTINGS & LIGHT MODE (default) ----- */
 /* CSS variables */
 :root {
-  /* Font & Basic */
+  /* Font & Basic size */
   font-family: var(--font-open-sans);
   font-size: 16px;
 
