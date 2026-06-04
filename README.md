@@ -77,12 +77,15 @@ Nu hälsas du välkommen till YoYo webshop!
 Byggverktyg: Vite<br>
 Språk: Javascript<br>
 Bibliotek: React<br>
-CSS: Hybrid med index.css & Tailwindcss v4<br>
+CSS: Tailwindcss med anpassningar i index.css v4<br>
 Font: @fontsource-variable/open-sans<br>
 Ikoner: lucide-react<br>
 SPA routing: react-router-dom<br>
 
 ### React Projektstruktur: react-webshop-2026
+Filerna innehåller kod och kommentarer för att skapa en god struktur.<br>
+Kommentarerna kompletterar koden och bidrar till förståelsen av kodens vad, hur och varför. Eftersom detta är ett utbildningsprojekt är kommentarerna mer utförliga på sina ställen, än vad som krävs för en erfaren utvecklare.
+
 README.md<br>
 index.html<br>
 
