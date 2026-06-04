@@ -1,5 +1,5 @@
-/* index.css for YoYo Webshop */
-/* CSS: Hybrid with index.css and Tailwindcss v4 */
+/* CSS: Tailwindcss with customizations for YoYo Webshop here in index.css */
+
 @import "tailwindcss";
 
 /* ----- TAILWIND & DARK MODE SETUP ----- */
