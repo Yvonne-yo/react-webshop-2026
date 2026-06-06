@@ -84,7 +84,7 @@ SPA routing: react-router-dom<br>
 
 ### React Projektstruktur: react-webshop-2026
 Filerna innehåller kod och kommentarer i en god struktur.<br>
-Kommentarerna kompletterar koden och bidrar till förståelsen av kodens vad, hur och varför. Eftersom detta är ett utbildningsprojekt är kommentarerna mer utförliga på sina ställen, än vad som krävs för en erfaren utvecklare. På många andra ställen bidrar de till att koden blir lättare att underhålla.
+Kommentarerna kompletterar koden och bidrar till förståelsen. Eftersom detta är ett utbildningsprojekt är kommentarerna mer utförliga på sina ställen, än vad som krävs för en erfaren utvecklare. På andra ställen bidrar de till att koden blir lättare att underhålla.
 
 README.md<br>
 index.html<br>
