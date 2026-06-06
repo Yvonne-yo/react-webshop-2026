@@ -2,38 +2,38 @@ import { useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 /* ----- PROVIDER COMPONENT: ThemeProvider ----- */
-// Provider of light/dark mode feature.
+// Provider for the global light/dark mode functionality
+//
+// Theme settings:
+// Manual: Checks localStorage for a user-selected theme preference.
+// System Fallback: Reads the operating system preference if no saved choice exists.
+
 export default function ThemeProvider({ children }) {
-  // Initiate state by using an arrow function that will only execute once, when the component is mounted.
-  // Theme will always be intiated by valid values "dark" or "light" , from localStorage or OS.
-  // First check: localStorage. If the user has made a selection previously, a value to be used is stored here.
-  // A validation is made to make sure that only a valid value is returned. Avoiding manipulated values.
-  // Second check: let the browser ask the OS if the user has set the system to dark mode. The second check
-  // will return dark or light.
+  // Theme initialization: Sets the starting theme selection when the application loads
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("YoYo_webshop_theme");
     const validThemes = ["light", "dark"];
 
-    // Defensive validation to ensure only a valid value is returned, avoiding corrupted data.
+    // Only accept valid design strings to protect against corrupted data
     if (savedTheme && validThemes.includes(savedTheme)) {
       return savedTheme;
     }
 
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
+    // Operating System Fallback Check (Media query activation via matchMedia)
+    // Will always provide an answer and matches makes the answer true or false
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
     return systemPrefersDark ? "dark" : "light";
   });
 
-  // useEffect executes every time the state "theme" changes.
-  // Set the new value to the <html> element and save the new value to localStorage
+  // Saves the theme selection to the HTML layout and localStorage
   useEffect(() => {
-    const root = window.document.documentElement;     // root is assigned to the <html> element
+    const root = window.document.documentElement;     // Assigns root directly to the <html> element
 
     if (theme === "dark"){
       root.classList.add("dark");
       root.classList.remove("light");
-      root.setAttribute("data-theme", "dark");        // sometimes needed for external libraries
+      root.setAttribute("data-theme", "dark");        // Links with attribute selectors inside index.css
     } else {
       root.classList.add("light");
       root.classList.remove("dark");
@@ -42,16 +42,16 @@ export default function ThemeProvider({ children }) {
 
     localStorage.setItem("YoYo_webshop_theme", theme);
 
-  }, [theme]);    // useEffect dependency set to "theme"
+  }, [theme]);
 
- 
-  // function that toggles the "theme", will be used by a button in webshop navbar
+  
+  // Function to toggle between light and dark mode
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
   
-  return(
+  return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>

@@ -3,10 +3,9 @@ import { MainContent } from "./MainContent";
 import { Footer } from "./Footer";
 
 /* ----- LAYOUT COMPONENT: MainLayout ----- */
-// Acts as the structural frame master template for the storefront interface.
-// Global Navigation Bar
-// Dynamic Client View Content
-// Global Footer
+// A layout component that sets up the main structure of the webshop.
+// It wraps the entire application with a shared navigation bar and footer.
+
 export default function MainLayout({ children }) {
     return (
         <div className="min-h-screen flex flex-col">
@@ -17,12 +16,10 @@ export default function MainLayout({ children }) {
 
             <NavBar />
 
-            <div
-                id="main-content"
-                className="container mx-auto px-4 grow focus:outline-none"
-            >
+            <div className="container mx-auto px-4 grow focus:outline-none">
                 <MainContent>{children}</MainContent>
             </div>
+            
             <Footer />
         </div>
     );

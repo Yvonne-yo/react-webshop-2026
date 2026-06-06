@@ -1,13 +1,12 @@
-// Fetch product information from DummyJSON API service at "https:/dummyjson.com/products"
-// async/await och try/catch is used.
+/* ----- API: productsApi.js ----- */
+// Fetches product data from the DummyJSON API (https://dummyjson.com/products).
+// Handles asynchronous network requests using try-catch blocks and async-await syntax.
 
-// ----- LAYERED ERROR HANDLING (Developer vs Webshop Customer) -----
-// 1. console.error logs the raw, technical system message directly into the browser's developer console.
-//    This is for developers to troubleshoot exactly what went wrong under the hood.
-// 2. throw new Error translates the failure into a clean, reassuring, and human-readable message.
-//    This is sent upward to the UI so the customer sees a friendly error-banner instead of scary system crash code.
+// ----- Error Handling -----
+// - console.error: Logs the technical system error in the developer console for debugging.
+// - throw new Error: Converts the failure into a short, friendly message passed up to the UI.
 
-/* ----- Function 1: Fetches a general block of products ----- */
+/* ----- Function 1: Fetch a general block of products ----- */
 export async function getAllProducts(limit = 12, skip = 0) {
 
     try {
@@ -18,7 +17,7 @@ export async function getAllProducts(limit = 12, skip = 0) {
         }
 
         const data = await response.json();
-        return(data);
+        return data;
 
     } catch (error) {
         console.error("Fetch failure in getAllProducts:", error.message);
@@ -27,7 +26,7 @@ export async function getAllProducts(limit = 12, skip = 0) {
 }
 
 
-/* ----- Function 2: Fetches products exclusively from one single category ----- */
+/* ----- Function 2: Fetch products from one single category ----- */
 export async function getProductsByCategory(categoryName, limit = 12, skip = 0) {
 
     try {
@@ -38,7 +37,7 @@ export async function getProductsByCategory(categoryName, limit = 12, skip = 0) 
         }
 
         const data = await response.json();
-        return(data);
+        return data;
 
     } catch (error) {
         console.error(`Fetch failure in getProductsByCategory for ${categoryName}:`, error.message);
@@ -46,10 +45,10 @@ export async function getProductsByCategory(categoryName, limit = 12, skip = 0) 
     }    
 }
 
-/* ----- Function 3: Fetches a single specific product by its unique ID ----- */
+/* ----- Function 3: Fetch a single specific product by its unique ID ----- */
 export async function getProductById(productId) {
     try {
-        const response = await fetch (`https://dummyjson.com/products/${productId}`);
+        const response = await fetch(`https://dummyjson.com/products/${productId}`);
 
         if(!response.ok) {
             throw new Error(`HTTP Error! Product ID ${productId} not found. Status: ${response.status}`);
@@ -64,7 +63,7 @@ export async function getProductById(productId) {
     }
 }
 
-/* ----- Function 4: Searches the catalogue for a specific text query string ----- */
+/* ----- Function 4: Search the product catalog (Query pattern matching) ----- */
 export async function searchProducts(queryString) {
     try {
         // Search URL dynamically according to official DummyJSON specifications

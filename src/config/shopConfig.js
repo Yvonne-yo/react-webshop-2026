@@ -1,6 +1,8 @@
-/* ----- Product categories for YoYo Webshop Beauty & Style ----- */
+/* ----- CONFIG: YoYo Webshop Beauty & Style Categories ----- */
 
-/* Exact spelling of the categories to match dummyjson API          */
+// List of categories currently active in the webshop application.
+
+/* Note: Exact spelling of the categories is required to match dummyjson API  */
 export const ALLOWED_CATEGORIES = [
     "beauty", 
     "fragrances", 
@@ -8,3 +10,6 @@ export const ALLOWED_CATEGORIES = [
     "sunglasses", 
     "womens-bags"
 ];
+
+// The maximum number of a single product allowed inside the shopping cart.
+export const MAX_ALLOWED_QUANTITY = 99;

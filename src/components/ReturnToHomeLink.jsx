@@ -1,10 +1,9 @@
-// src/components/ReturnToHomeLink.jsx
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-/* ----- COMPONENT: ReturnToHomeLink (Atom) ----- */
-// A reusable structural anchor link designed to navigate the user
-// fluidly back to the webshop home.
+/* ----- COMPONENT: ReturnToHomeLink ----- */
+// A reusable link component designed to take the user back to the webshop home page.
+// Used in multiple views across the shop for a consistent design.
 
 export default function ReturnToHomeLink() {
   return (

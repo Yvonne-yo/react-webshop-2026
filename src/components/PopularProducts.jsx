@@ -4,26 +4,25 @@ import { ProductCard } from "./ProductCard";
 import BoutiqueLoader from "./BoutiqueLoader";
 import BoutiqueError from "./BoutiqueError";
 
-
 /* ----- COMPONENT PopularProducts ----- */
-// Render "This Week's Most Popular Products" to the storefront HomeView
-// Showcases our curated, whitelisted collection of boutique favorites 
-// driven entirely by the asynchronous useFeaturedProducts lifecycle hook.
+/* Used by the HomeView               	 */
+// Render "This Week's Most Popular Products" to the HomeView
+// Displays a collection of selected items
 
 export default function PopularProducts() {
 	const { products, loading, error } = useFeaturedProducts();
 
-	// State interception: loading
+	// Early Exit: loading
 	if (loading) {
 		return <BoutiqueLoader message="Assembling curated favorites..." />;
 	}
 
-	// State interception: error handling
+	// Early Exit: error handling
 	if (error) {
 		return <BoutiqueError title="Catalogue Failure" message={error} />;
 	}
 
-	// Empty state protection
+	// Safe return if array is empty
 	// If the products array is completely empty (due to an empty shopConfig array 
 	// or failed network parsing), return absolutely nothing (null).
 	// This gracefully hides the entire section from the user's view.
@@ -53,5 +52,3 @@ export default function PopularProducts() {
 		</section>
     );
 }
-
-

@@ -1,6 +1,7 @@
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
 
 /* ----- COMPONENT: HeroSection ----- */
+/* Used by the HomeView               */
 
 /* ----- BOX 1: WelcomeStrip - The top text banner. ----- */
 function WelcomeStrip() {
@@ -17,6 +18,7 @@ function WelcomeStrip() {
 function LogoCenterpiece() {
   return (
     <section
+      // Styling: bg-radial-[100%_120px_at_center] makes sure that the ellipse stays in place behind the white circle.
       className="bg-radial-[100%_120px_at_center] from-white via-brand to-brand-dark 
                         border-b border-text-muted/10 py-16 
                         flex justify-center items-center 
@@ -34,10 +36,9 @@ function LogoCenterpiece() {
           <img
             src={logoButterfly}
             alt="YoYo Webshop Centerpiece Logo"
-            className="w-16 h-16 object-contain rounded-md" // css styling
-            width="64" // html reserves size for the img
-            height="64" // avoids Layout Shift when loading the webpage
-                        // performance optimization
+            className="w-16 h-16 object-contain rounded-md" 
+            width="64"  // html reserves size for the img
+            height="64" // Avoids Cumulative Layout Shift (CLS performance optimization)
           />
         </div>
       </div>

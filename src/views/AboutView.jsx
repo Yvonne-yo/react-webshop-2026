@@ -1,5 +1,7 @@
-export default function AboutView () {
-    return(
+/* ----- VIEW COMPONENT: AboutView ----- */
+
+export default function AboutView() {
+    return (
         <div className="container mx-auto px-4 py-12">
 
             <h1 className="text-font-size-h1 font-black text-text-main mb-4"> 
@@ -14,5 +16,5 @@ export default function AboutView () {
             </p>
 
         </div>
-    )
+    );
 }
