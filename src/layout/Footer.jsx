@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="w-full mt-auto">
 
-      {/* /* ----- Global navigation return ----- */}
+      {/* Link back to HomeView */}
       <div className="container mx-auto px-4 py-6 flex justify-center border-t border-text-muted/5 bg-bg-main/50 transition-opacity duration-300 ease-out">
         <ReturnToHomeLink />
 

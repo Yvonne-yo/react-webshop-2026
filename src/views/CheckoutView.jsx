@@ -1,27 +1,25 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle, CreditCard, ShoppingBag, Loader2} from "lucide-react";
+import { ArrowLeft, CheckCircle, CreditCard, ShoppingBag, Loader2 } from "lucide-react";
 import logoButterfly from "../assets/YoYo_butterfly_only_200x199.jpg";
 import { useCart } from "../hooks/useCart";
 import QuantityController from "../components/QuantityController";
 
 /* ----- VIEW COMPONENT: CheckoutView ----- */
-// Renders the final customer verification and checkout layout canvas.
-// Simulates a secure live ordering pipeline utilizing stateful transaction 
-// processing states and an animated post-purchase modal dialogue overlay.
-
+// Renders the final checkout page where users can review, change and confirm their order (Checkout simulation).
+// Simulates an order process with a loading sequence and a final order confirmation message.
 
 /* ----- SUBCOMPONENT: OrderConfirmationModal ----- */
-// Renders a fixed modal dialogue simulating a successful purchase response from the backend server
-function OrderConfirmationModal({ formData, onFinalize}) {
+// Renders a fixed success modal after order completion
+function OrderConfirmationModal({ formData, onFinalize }) {
     return (
-        // Backdrop shadow element that locks the screen completely
+        // Modal backdrop 
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 ease-out">
 
-            {/* Centralized Dialogue Content Box */}
+            {/* Modal Content */}
             <div className="bg-bg-card border border-text-muted/10 p-8 rounded-2xl max-w-md w-full text-center shadow-2xl transition-all duration-300 ease-out scale-100 opacity-100">
 
-                {/* Animated Green Checkmark Vector Badge */}
+                {/* Green Checkmark */}
                 <div className="w-16 h-16 bg-green-500/10 dark:bg-green-500/5 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle className="w-10 h-10 stroke-[2.5]" />
                 </div>
@@ -54,13 +52,13 @@ function OrderConfirmationModal({ formData, onFinalize}) {
                     </div>
                 </div>
                 
-                {/* FINAL CLOSURE ACTION TRIGGER BUTTON */}
+                {/* Button: Clears the shopping cart and returns to the HomeView */}
                 <button
-                    onClick={onFinalize}
+                    onClick={ onFinalize }
                     className="w-full h-11 bg-brand hover:bg-brand-dark text-white font-black text-xs uppercase tracking-wider 
                                 rounded-lg shadow-xs transition-all active:scale-95 cursor-pointer flex items-center justify-center mt-8"
                 >
-                    Return to YoYo webshop!
+                    Return to YoYo Webshop!
                 </button>
 
             </div>
@@ -69,21 +67,19 @@ function OrderConfirmationModal({ formData, onFinalize}) {
 }
 
  
-/* ----- SUBCOMPONENT 1: CheckoutForm ----- */
+/* ----- SUBCOMPONENT: CheckoutForm ----- */
 // Renders the Form to collect the customer's personal information.
-function CheckoutForm({ formData, handleInputChange}) {
+function CheckoutForm({ formData, handleInputChange }) {
     return (
         <div className="lg:col-span-2 bg-bg-card p-6 md:p-8 rounded-xl border border-text-muted/10 shadow-xs flex flex-col gap-6">
             <h3 className="font-black text-text-main text-base uppercase tracking-wider border-b border-text-muted/5 pb-2">
                 Shipping & Customer Information
             </h3>
 
-            {/* Symmetrical Two-Column Input Grid Row: First and Last Name */}
+            {/* First and Last Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* ACCESSIBILITY & UX BINDING LAYER (WCAG Compliance) */}
-                {/* Uses 'htmlFor' (JSX equivalent of HTML 'for') mapped strictly to the input 'id'. */}
-                {/* This ensures screen readers can programmatically associate labels with fields, */}
-                {/* while expanding the interactive click/tap target area for mobile devices. */}
+                {/* Accessibility: Links labels to inputs using htmlFor (React's version of HTML 'for'). */}
+                {/* This allows screen readers to read fields correctly and expands the clickable tap area. */}
                 <div className="flex flex-col gap-1.5">
                     <label htmlFor="firstName" className="text-xs font-bold text-text-muted uppercase tracking-wider">
                         First Name
@@ -114,7 +110,7 @@ function CheckoutForm({ formData, handleInputChange}) {
                 </div>
             </div>
 
-            {/* Full-Width Email Input Row */}
+            {/* Email */}
             <div className="flex flex-col gap-1.5">
                 <label htmlFor="email" className="text-xs font-bold text-text-muted uppercase tracking-wider">
                     Email Address
@@ -130,7 +126,7 @@ function CheckoutForm({ formData, handleInputChange}) {
                     />
             </div>
 
-            {/* Full-Width Delivery Address Input Row */}
+            {/* Delivery Address */}
             <div className="flex flex-col gap-1.5">
                 <label htmlFor="address" className="text-xs font-bold text-text-muted uppercase tracking-wider">
                     Delivery Address
@@ -146,7 +142,7 @@ function CheckoutForm({ formData, handleInputChange}) {
                 />
             </div>
 
-            {/* Symmetrical Two-Column Postal Layout Grid Row: Zip Code and City */}
+            {/* Zip Code and City */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="flex flex-col gap-1.5 sm:col-span-1">
                 <label htmlFor="zipCode" className="text-xs font-bold text-text-muted uppercase tracking-wider">
@@ -182,8 +178,8 @@ function CheckoutForm({ formData, handleInputChange}) {
 }
 
 
-/* ----- SUBCOMPONENT 2: CheckoutSummary ----- */
-// Renders the sticky capsule containing final accounting balances.
+/* ----- SUBCOMPONENT: CheckoutSummary ----- */
+// Renders the total cost and the order submission button.
 function CheckoutSummary({ totalItemsCount, totalCartPrice, isProcessing }) {
     return (
         <div className="bg-bg-card p-6 rounded-xl border border-text-muted/10 shadow-xs flex flex-col gap-6 lg:sticky lg:top-24">
@@ -191,20 +187,20 @@ function CheckoutSummary({ totalItemsCount, totalCartPrice, isProcessing }) {
                 Final Summary
             </h3>
 
-            {/* Final accounting balances. */}
+            {/* Total items and price  */}
             <div className="flex flex-col gap-3 text-sm">
                 <div className="flex justify-between font-medium text-text-muted">
-                    <span>Total units:</span>
+                    <span>Total items:</span>
                     <span className="font-bold text-text-main">{totalItemsCount} items</span>
                 </div>
             
                 <div className="flex justify-between font-black text-text-main text-base border-t border-text-muted/5 pt-3 mt-1">
-                    <span>Total amount:</span>
+                    <span>Total price:</span>
                     <span className="text-lg">${totalCartPrice.toFixed(2)}</span>
                 </div>
             </div>
 
-            {/* DYNAMIC ACTION TRIGGER BUTTON */}
+            {/* Button: Triggers the simulated checkout sequence */}
             <button
                 type="submit"
                 disabled={isProcessing || totalItemsCount === 0}
@@ -227,17 +223,16 @@ function CheckoutSummary({ totalItemsCount, totalCartPrice, isProcessing }) {
 
 
 
-/* ----- MAIN ROUTER VIEW: CheckoutView ----- */
+/* ----- MAIN: CheckoutView ----- */
 export default function CheckoutView() {
-    // Extract global cart values and mutation clearing actions from the core engine
     const { totalCartPrice, totalItemsCount, clearCart } = useCart();
 
-    // Navigation hook enables routing back to root branches down the pipeline
+    // Hook used for programmatic navigation
     const navigate = useNavigate();
 
     /* --- LOCAL STATES --- */
 
-    // LOCAL STATE 1: Form input matrix
+    // LOCAL STATE 1: Form data object
     // Form to collect the customer's personal information to complete the order.
     const [formData, setFormData] = useState({
         firstName: "",
@@ -248,20 +243,15 @@ export default function CheckoutView() {
         city: ""
     });
     
-    // LOCAL STATE 2: LIVE TRANSACTION PROCESSING
-    // Toggles a load spinner during the checkout timeout phase.
+    // LOCAL STATE 2: Toggles a load spinner during the checkout timeout phase.
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // LOCAL STATE 3: MODAL DIALOGUE VISIBILITY CONTROLLER
-    // Manages the absolute backdrop pop-up modal overlay state.
+    // LOCAL STATE 3: Controls whether the success modal is open or closed
     const [showModal, setShowModal] = useState(false);
-
-
 
     /* --- HANDLERS --- */
 
-    // HANDLER 1: Form input synchronization
-    // Dynamically tracks individual keystrokes and locks them into the local form object state.
+    // HANDLER 1: Saves all input fields to the local state object
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -270,7 +260,7 @@ export default function CheckoutView() {
         }));
     };
 
-    // HANDLER 2: Live transaction simulation
+    // HANDLER 2: Submits the form and triggers the checkout simulation
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevents browser default form page refreshing behavior
 
@@ -279,7 +269,7 @@ export default function CheckoutView() {
 
         // Step 2: Trigger the delay to simulate bank communication over the network
         setTimeout(() => {
-            // Trun off the load spinner
+            // Turn off the load spinner
             setIsProcessing(false);
 
             // Open modal with a order confirmation
@@ -299,25 +289,24 @@ export default function CheckoutView() {
                     to="/cart"
                     className="text-brand hover:underline font-bold text-sm inline-flex items-center gap-2 transition-colors"
                 >
-                    <ArrowLeft className="w-4 h-4" />
-                        Back to shopping cart
+                    <ArrowLeft className="w-4 h-4" /> Back to shopping cart
                 </Link>
             </div>
 
             <h1 className="text-3xl font-black text-text-main tracking-tight mb-8">
-                Secure Checkout
+                Checkout
             </h1>
 
-            {/* Main Layout Form Wrapper */}
+            {/* The Form */}
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                {/* Render subcomponent 1: Personal details form inputs */}
-                {/* Passes down synchronized data and change matrix handlers */}
+                {/* Render subcomponent: CheckoutForm */}
+                {/* Passes down data and change handler as props */}
                 <CheckoutForm
                     formData={formData}
                     handleInputChange={handleInputChange}
                 />
 
-                {/* Render subcomponent 2: Checkout final accounting balances summary */}
+                {/* Render subcomponent: CheckoutSummary */}
                 <CheckoutSummary
                     totalItemsCount={totalItemsCount}
                     totalCartPrice={totalCartPrice}
@@ -325,8 +314,8 @@ export default function CheckoutView() {
                 />
             </form>
 
-            {/* POST-PURCHASE POP-UP DIALOGUE MODAL OVERLAY */}
-            {/* Mounts safely onto the view root once your showModal state triggers true! */}
+            {/* Order confirmation success modal */}
+            {/* Renders a full-screen modal when showModal is true */}
             {showModal && (
                 <OrderConfirmationModal
                     formData={formData}
@@ -337,4 +326,5 @@ export default function CheckoutView() {
         </div>
     );
 }
+
 

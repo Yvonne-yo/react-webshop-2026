@@ -3,12 +3,11 @@ import { getProductsByCategory } from "../api/productsApi";
 import { ALLOWED_CATEGORIES } from "../config/shopConfig";
 
 /* ----- CUSTOM HOOK useFeaturedProducts ----- */
-// Fires parallel asynchronous API network requests to resolve a handpicked 
-// list of visual top seller products simultaneously using Promise.all()
-
-// see hook useProducts, for explanations about 
-// Memory leak protection: isMounted
-// THE REACT REACTIVE ASYNCHRONOUS LIFECYCLE (How useProducts renders in waves)
+// Fetches a selected collection of products for the homepage.
+// Fetches multiple API requests at the same time using Promise.all to optimize load performance.
+//
+// Note: See useProducts for detailed explanations about memory leak protection (isMounted) 
+// and the asynchronous lifecycle rendering waves.
 
 export function useFeaturedProducts() {
     const [products, setProducts] = useState([]);
@@ -22,12 +21,11 @@ export function useFeaturedProducts() {
             setLoading(true);
             setError(null);
 
-            // try-catch-finally
             try {
-                // HIGH PERFORMANCE PARALLEL CATEGORY FETCH (Promise.all):
+                // Parallel category fetch using Promise.all
                 // Extracts the first four allowed categories from the configuration.
                 // For each category, the server is requested to return exactly one product (limit=1).
-                // Promise.all executes all network requests simultaneously at the exact same millisecond.
+                // Promise.all runs all network requests at the exact same time.
                 const targetCategories = ALLOWED_CATEGORIES.slice(0, 4);
 
                 const fetchPromises = targetCategories.map((category) => 
@@ -36,30 +34,29 @@ export function useFeaturedProducts() {
 
                 const responses = await Promise.all(fetchPromises);
 
-                // ----- DATA TRANSFORMATION PIPELINE -----
-                // Promise.all returns an array of response objects with server metadata (total, skip, limit).
-                // This logic extracts the actual products and turns them into a flat array:
+                // ----- Data mapping -----
+                // Promise.all returns an array of response objects containing metadata (total, skip, limit).
+                // This logic extracts the specific product objects and turns them into a flat array:
                 //
-                // 1. responses.map(...) loops through the category answers from the server.
-                // 2. Since the fetch uses 'limit=1', the code extracts the single product object found at index [0] 
-                //    and drops the surrounding server metadata.
-                // 3. .filter(Boolean) works as a safety net. If a category is empty or fails, it cleans away 
-                //    the empty item so the grid can render safely without breaking the application.
+                // 1 responses.map(...) loops through the category answers from the server.
+                // 2 Extracts the single product object found at index [0] and drops the surrounding metadata.
+                // 3 .filter(Boolean) acts as a safety net. Cleans away any empty or corrupted items 
+                //    so the UI can render safely without causing runtime crashes.
                 const mixedItems = responses.map((response) => response.products[0]).filter(Boolean);
 
-                // Only commit updates to state if the component lifecycle is still currently mounted
+                // Only commit updates to state if the component lifecycle is still currently mounted.
                 if (isMounted) {
                     setProducts(mixedItems);
                 }
 
             } catch (err) {
-                // Safe interception of errors caught inside the asynchronous fetch sequence
+                // Errors caught during the fetch sequence
                 if (isMounted) {
                     setError(err.message || "Failed to compile the featured collection");
                 }
                 
             } finally {
-                // The finally block guarantees execution, ensuring that the loading screen ends for all response
+                // Guarantees that the loading flag is turned off regardless of a success or a failure.
                 if (isMounted) {
                     setLoading(false);
                 }
@@ -72,8 +69,8 @@ export function useFeaturedProducts() {
             isMounted = false;
         };
 
-    }, []);     // useEffect dependency: empty array means this only runs once when the storefront Loads
+    }, []);     // Runs once when HomeView mounts (Refetches if the user navigates away and returns).
 
     // Object Property Shorthand: example loading: loading can be replaced by just loading.
-    return { products, loading, error};
+    return { products, loading, error };
 }

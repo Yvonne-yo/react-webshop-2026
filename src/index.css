@@ -6,8 +6,8 @@
 /* To make sure that dark mode works with all tailwindcss v4 versions. */
 @custom-variant dark (&:where(.dark, .dark *));     
 
-/* Tailwind configuration */
-/* Theme variables instruct Tailwind to create new utility classes that can be used in the project. */
+/* Tailwind v4 @theme configuration */
+/* Theme variables create new utility classes for the project */
 @theme {
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
@@ -62,33 +62,28 @@
   --grid-gap: clamp(1rem, 2.5vw, 2.5rem);
 }
 
-/* ----- DARK MODE LOGIC ----- */
-/* CSS variables dark mode, automatically from system                                         */
-/* Apply dark mode from the system, if the user has not forced light mode                     */
-/* Ask browser, has the user set computer/mobile to dark mode? If yes, execute {the code}     */
-/* Apply these dark mode colors on root, but only if css class .light is NOT set manually by  */
-/* the webshop toggle light/dark mode button. */
+/* ----- DARK MODE (Theme) ----- */
+
+/* System default: Automatically applies dark mode colors from the operating system, 
+   but only if the user has not actively selected light mode in the shop. */
 @media (prefers-color-scheme: dark) {   
   :root:not(.light) {                   
     --bg-main: rgb(10 26 38);         /* Deep dark turquoise background.                    */
     --bg-card: rgb(18 43 61);         /* Slightly lighter turquoise blue for card.          */
     --text-main: rgb(235 246 252);    /* Light turquoise white text for readability.        */
-    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text      */
-
+    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text.     */
   }
 }
 
-/* CSS variables for dark mode, manually setting                                              */
-/* Apply these dark mode colors on root, but only if dark mode is set manually by             */
-/* the webshop toggle light/dark mode button.                                                 */
-/* Use colors for css class .dark OR when data attribute is data-theme=dark (or both)         */
-/* example <html data-theme="dark"> (preferred by some libraries/scripts)                     */
+/* Manual Selection (Highest priority): Forces dark mode colors whenever the user manually clicks 
+   the webshop toggle button. */
 .dark, [data-theme="dark"] {            
     --bg-main: rgb(10 26 38);         /* Deep dark turquoise background.                    */
     --bg-card: rgb(18 43 61);         /* Slightly lighter turquoise blue for card.          */
     --text-main: rgb(235 246 252);    /* Light turquoise white text for readability.        */
-    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text      */
+    --text-muted: rgb(121 157 179);   /* Soft muted light turquoise for secondary text.     */
 }
+
 
 
 /* ----- BASE TYPOGRAPHY & GLOBAL STYLES ----- */
@@ -116,22 +111,18 @@ img {
   display: block;
 }
 
-/* ----- ACCESSIBILITY HELPERS ----- */
+/* ----- ACCESSIBILITY WCAG HELPERS ----- */
 /* Deliberately keeping these helper classes in CSS to clarify the accessibility choices for the project. */
  
-/* Clear marking when navigating with the keyboard (Tab-key).
-    Tailwind v4 translation: 
-    This can be added directly to interactive items using classes like:
-    "focus-visible:outline-3 focus-visible:outline-brand focus-visible:outline-offset-2"  */
+/* Clear marking when navigating with the keyboard (Tab-key). */
+/* Tailwind v4 inline replacement option: "focus-visible:outline-3 focus-visible:outline-brand focus-visible:outline-offset-2" */
 :focus-visible {
   outline: 3px solid var(--color-brand);
   outline-offset: 2px;
 }
 
-/* Skip to content - skips long navigation menus for keyboard users.
-    Tailwind v4 translation: 
-    This layout logic can be written entirely in JSX on the anchor tag using:
-    "absolute -top-25 left-0 bg-brand text-white p-4 z-2000 transition-all focus:top-0"   */
+/* Skips long menus for keyboard users. (skip-link functionality) */
+/* Tailwind v4 inline replacement option: "absolute -top-25 left-0 bg-brand text-white p-4 z-2000 transition-all focus:top-0" */
 .skip-link {
   position: absolute;
   top: -100px;
@@ -144,14 +135,8 @@ img {
 }
 .skip-link:focus { top: 0; }
 
-
-/* Hide text visually but keep for screen readers.
-    The sighted user only sees the icon, while the visually                          
-    impaired user hears "View cart" spoken aloud for example     
-    Tailwind v4 translation: 
-    Tailwind has an official built-in utility class that replaces this entire block completely:
-    Simply use the class "sr-only" anywhere in your HTML/JSX without writing this CSS.           
-    sr-only = Screen Reader Only                                                            */
+/* Hides text visually but keeps it readable for screen readers (screen-reader accessibility) */
+/* Tailwind v4 inline replacement option: Use the standard "sr-only" utility class */
 .sr-only {                                                
   width: 1px;
   height: 1px;

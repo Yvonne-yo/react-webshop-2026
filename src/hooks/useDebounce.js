@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 /* ----- CUSTOM HOOK: useDebounce ----- */
 // Delays the updating of a value until a specified timeout duration has passed.
+
 export function useDebounce(value, delay = 300) {
     const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -21,7 +22,7 @@ export function useDebounce(value, delay = 300) {
             clearTimeout(timer);
         };
 
-    }, [value, delay]); // useEffect dependency
+    }, [value, delay]); 
 
     return debouncedValue;
 }

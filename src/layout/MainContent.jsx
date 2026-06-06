@@ -5,7 +5,7 @@
 // It allows screen readers or keyboard users to skip past the navigation menus 
 // and jump straight to the main text.
 
-export function MainContent ({ children }){
+export function MainContent({ children }){
     return (
         <div>
             <main id="main-content" className="grow focus:outline-none">

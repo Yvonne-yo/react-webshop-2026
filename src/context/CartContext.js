@@ -1,12 +1,8 @@
 import { createContext } from "react";
 
 /* ----- CONTEXT: CartContext ----- */
-// Initializes the global context instance for the shopping cart subsystem.
-//
-// DESIGN NOTE: Initialized strictly to 'undefined' rather than a mock object.
-// This acts as a defensive blueprint safety layer. It allows custom hooks (like useCart) 
-// to instantly verify if a consuming component is safely wrapped inside the CartProvider. 
-// If accessed outside the provider boundary, it will immediately catch the undefined 
-// fallback and throw a clear error instead of failing silently.
 
+// Creates the shopping Cart context with a default undefined value.
+// Note: This forces a crash check inside the useCart.js hook if a component 
+// attempts to read the Cart outside of a valid CartProvider wrapper.
 export const CartContext = createContext(undefined);

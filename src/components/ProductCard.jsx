@@ -1,32 +1,26 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import { MAX_ALLOWED_QUANTITY } from "../config/shopConfig";
 import QuantityController from "./QuantityController";
 
-/* ----- COMPONENT ProductCard ----- */
-// A reusable presentation component that renders a product card.
-// Shared across both main storefront grids and dynamic category collection feeds.
+/* ----- COMPONENT: ProductCard ----- */
+// A reusable component shared across store grids and category feeds to display individual items.
 // 
-// ARCHITECTURAL NOTE (Redundant Defensive Design):
-// This component implements a double defensive click-protection framework (event shielding).
-// It runs event propagation prevention both within individual button click handlers and 
-// on the wrapping layout container. This strictly blocks event bubbling to the parent Link, 
-// ensuring that clicking numbers, margins, or triggers does not cause accidental page navigation.
+// NOTE: 
+// To prevent layout clicks from bubbling up to the parent card Link, a dual lock is used:
+// - In the interaction handlers: Using preventDefault() and stopPropagation() on function level.
+// - In the wrapping actions container: Re-applying both methods directly on the button layout div.
 
 export function ProductCard({ product }) {
-  // Extract global cart state and mutation methods from the hook
   const { cartItems, addToCart, updateQuantity, removeFromCart } = useCart();
 
-  // Standardized ceiling constraint to enforce catalog safety bounds (max 99 items)
-  const MAX_ALLOWED_QUANTITY = 99;
-
-  // System lookup to see if this product already exists in the cart array
+  // Check if the product already exists in the cart array.
   const existingCartItem = cartItems.find((item) => item.id === product.id);
 
-
-  /* ----- INTERACTIVE INTERACTION HANDLERS ----- */
+  /* ----- EVENT HANDLERS ----- */
   // Performs changes on the global shopping cart state.
   // It stops the click action from moving up to the parent page link (event bubbling)
-  // by stopping it immediately on the first line (preventDefault and stopPropagation).
+  // by stopping it immediately on the first lines (preventDefault and stopPropagation).
   // This blocks the link navigation from being triggered before React redraws the screen (re-render).
 	const handleAddToCartClick = (e) => {
 		e.preventDefault(); 
@@ -57,6 +51,7 @@ export function ProductCard({ product }) {
   return (
     // Link wrapping the ProductCard making the whole card clickable. 
     // This programmatically routes the user straight to the ProductDetailView layout canvas.
+    // Exception: Clicks on buttons "Add to cart" and "QuantityController"
     <Link
       to={`/products/${product.id}`}
       className="bg-bg-card p-4 rounded-xl border border-text-muted/10 shadow-xs 
@@ -64,9 +59,9 @@ export function ProductCard({ product }) {
                  transition-all duration-300 cursor-pointer group"
     >
 
-      {/* Upper Layout Box: Image and Metadata texts */}
+      {/* Image and Product information */}
       <div>
-        {/* Product Thumbnail Image Container Area */}
+        {/* Product Thumbnail Image */}
         <div className="aspect-square bg-white rounded-xl flex items-center justify-center mb-4 overflow-hidden relative border border-text-muted/40">
           <img 
             src={product.thumbnail} 
@@ -81,32 +76,29 @@ export function ProductCard({ product }) {
           {product.category.replace("-", " ")}
         </span>
         
-        {/* Product Title heading hierarchy */}
+        {/* Product Title */}
         <h4 className="font-bold text-text-main text-base tracking-tight mb-2 truncate">
           {product.title}
         </h4>
       </div>
       
-      {/* Lower Layout Box: Price and Transforming Action Button Footer */}
-      {/* Isolated safely outside the text div to guarantee rigid vertical alignment */}
-      {/* Enforced single-line text layout using whitespace-nowrap */}
-
+      {/* Price and Action Button */}
+      
       {/* Price */}
 			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-2 border-t border-text-muted/5 min-h-13" >
         <span className="font-black text-text-main text-lg whitespace-nowrap">
           ${product.price.toFixed(2)}
         </span>
 
-				{/* BUTTON FIELD: Intercepted Cart Trigger */}
+				{/* BUTTON FIELD: */}
 				{/* BUTTONS using the event handlers to change the cart */}
         {/* If the product does NOT exist in the cart, show the "Add to cart"-button */}
         {/* If the product already exists in the cart, show the QuantityController-button. */}
-        {/* QuantityController-button consists of Plus and Minus buttons and displays the current quantity for the product. */}
+        {/* QuantityController-button consists of Plus and Minus buttons and displays the current quantity of the product. */}
         
-        {/* DEFENSIVE EVENT PROPAGATION SHIELD (Click protection) */}
         {/* The onClick handler on this div stops any clicks inside the panel from */}
-        {/* moving up to the parent page link (blocks event bubbling). This ensures that */}
-        {/* clicking on the number or margins does not trigger the link navigation. */}
+        {/* moving up to the parent page link (blocks event bubbling). This prevents */}
+        {/* margin clicks from triggering the link navigation. */}
         <div 
           onClick={(e) => {e.preventDefault(); e.stopPropagation(); }}
           className="w-full sm:w-32 flex items-center justify-end">
@@ -114,20 +106,19 @@ export function ProductCard({ product }) {
         
           {!existingCartItem 
             ? ( 
-              /* STATE 1: INITIAL PURCHASE CALL-TO-ACTION */
+              /* STATE 1: Show initial purchase button */
               <button 
                 onClick={handleAddToCartClick}
                 className="w-full h-8 flex items-center justify-center whitespace-nowrap bg-brand hover:bg-brand-dark text-white font-bold text-xs px-4 rounded-lg transition cursor-pointer shadow-xs active:scale-95 text-center"
-              aria-label={`Add ${product.title} to shopping cart`}
-            >
+                            aria-label={`Add ${product.title} to shopping cart`}
+              >
                 Add to cart
               </button>
 
             ) : (
-
-              /* STATE 2: REUSABLE MOUNTED STEP QUANTITY CONTROLLER ATOM */
-              // Passes the click-protected handlers down as props to the controller panel
-              // to safely synchronize the global cart updates without causing event bubbling.
+              /* STATE 2: Quantity Controller */
+              // Passes the click-protected handlers down as props to the QuantityController, 
+              // to safely update the global cart without causing event bubbling.
               <QuantityController
                 quantity={existingCartItem.quantity}
                 onIncrement={handleIncrementClick}

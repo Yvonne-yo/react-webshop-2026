@@ -38,8 +38,7 @@ function LogoCenterpiece() {
             alt="YoYo Webshop Centerpiece Logo"
             className="w-16 h-16 object-contain rounded-md" 
             width="64"  // html reserves size for the img
-            height="64" // avoids Layout Shift when loading the webpage
-                        // performance optimization
+            height="64" // Avoids Cumulative Layout Shift (CLS performance optimization)
           />
         </div>
       </div>
