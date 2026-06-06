@@ -141,6 +141,7 @@ CategoryView.jsx<br>
 CheckoutView.jsx<br>
 ContactView.jsx<br>
 HomeView.jsx<br>
+NotFoundView<br>
 ProductDetailView.jsx<br>
 SearchView.jsx<br>
 
