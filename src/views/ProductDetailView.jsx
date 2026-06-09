@@ -32,7 +32,7 @@ export default function ProductDetailView() {
                 const data = await getProductById(productId);
 
                 // Whitelist filtering to cross-match the products with allowed shop categories
-                const secureFilteredResults =  ALLOWED_CATEGORIES.includes(data.category)
+                const secureFilteredResults =  ALLOWED_CATEGORIES.includes(data.category);
                 
                 if (isMounted && secureFilteredResults) {
                     setProduct(data);
