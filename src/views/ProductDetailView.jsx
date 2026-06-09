@@ -4,6 +4,7 @@ import { getProductById } from "../api/productsApi";
 import BoutiqueLoader from "../components/BoutiqueLoader";
 import BoutiqueError from "../components/BoutiqueError";
 import ProductDetailCard from "../components/ProductDetailCard";
+import { ALLOWED_CATEGORIES } from "../config/shopConfig";
 
 /* ----- VIEW COMPONENT: ProductDetailView ----- */
 // Fetches and displays details for a single product using dynamic URL parameters
@@ -30,7 +31,10 @@ export default function ProductDetailView() {
             try {
                 const data = await getProductById(productId);
 
-                if (isMounted) {
+                // Whitelist filtering to cross-match the products with allowed shop categories
+                const secureFilteredResults =  ALLOWED_CATEGORIES.includes(data.category)
+                
+                if (isMounted && secureFilteredResults) {
                     setProduct(data);
                 }
 
